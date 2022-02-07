@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 24.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!-- <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 256 256" style="enable-background:new 0 0 256 256;" xml:space="preserve"> -->
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+
+    <style type="text/css">
+        .mystyle{fill-rule:nonzero;clip-rule:nonzero;fill:black;stroke:white;stroke-width:20;stroke-linecap:butt}
+    </style>
+
+<!--    stroke="black" style="fill:lime;stroke:purple;stroke-width:1"-->
+<!--    strok strokewidth linecap-->
+    <g style="fill:blue;stroke:red;stroke-width:100" fill="green" stroke-width="100">
+
+
+
+    <line class="mystyle" x1="0" y1="80" x2="100" y2="20" />
+
+    </g>
+
+
+</svg>
