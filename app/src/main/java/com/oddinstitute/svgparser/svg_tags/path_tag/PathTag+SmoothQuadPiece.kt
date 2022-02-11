@@ -9,22 +9,18 @@ fun PathTag.smoothQuadPiece(piece: String, curPoint: PointF, prevSegment: Segmen
 {
     val str = piece
             .replace(" ", ",")
-            .replace("t,", "")
-            .replace("T,", "")
             .replace("t", "")
             .replace("T", "")
-            .replace(",,", ",")
             .replace(" ", ",")
+            .replace(",,", ",") // it's possible to get two commas
 
-    val points = str.split(",")
+    val points = str
+            .split(",")
 
-    // if we are relative, we find the actual value
+    // if we are relative, we find the actual value based on the cur point
+    // this is simply a shortcut, when relative, we use curPoint, when not, we don't
     // if not, we just add zero
-    var intCurPoint = PointF() // 0, 0
-    if (piece[0] == 't') // relative
-        intCurPoint = curPoint
-
-
+    val intCurPoint = curPoint * (piece[0] == 't').toFloat()
 
     val smoothQuad = Segment(PathType.SmoothQuad)
     smoothQuad.knot = PointF(points[0].toFloat() + intCurPoint.x,

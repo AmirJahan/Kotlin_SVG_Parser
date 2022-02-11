@@ -7,8 +7,7 @@ import org.xmlpull.v1.XmlPullParser
 
 class PathTag(val parser: XmlPullParser) : Tag(parser)
 {
-
-    override fun decode(): Polygon
+    override fun decode(): ArrayList<Polygon>
     {
         val polygons: ArrayList<Polygon> = arrayListOf()
         var dString: String = ""
@@ -19,12 +18,13 @@ class PathTag(val parser: XmlPullParser) : Tag(parser)
 
         // the pathdata might make multiple polygons.
         val cleanPathString = dString.cleanTags()
+                .replace("z", "Z|") // this is specific to paths. for paths, we break with "|".
+                .replace("Z", "Z|")
 
-
-        // HERE, WE BREAK THE string by Zs
+        // HERE, WE BREAK THE string by |s
         val separatePolyPiecesStr =
             cleanPathString
-                    .split("(?<=Z)".toRegex())
+                    .split("|")
                     .toTypedArray()
 
         val polygonsStringArr = arrayListOf<String>()
@@ -42,26 +42,6 @@ class PathTag(val parser: XmlPullParser) : Tag(parser)
             polygons.add(polygon)
         }
 
-
-        // here when we have multiple separate polygons
-        // we still merge them together
-        // I think this has been the intention of SVG
-        // if you have a "z" in the middle of path d string
-        // it means the polygon closes, yet another part of the same polygon begins
-        // for that:
-
-        val outPolygon = polygons.first()
-
-        if (polygons.count() > 1)
-            for (i in 1 until polygons.count()) // from 2nd onwards
-                outPolygon.shapeNode.pathValue.segments.addAll(polygons[i].shapeNode.pathValue.segments)
-
-        return outPolygon
+        return polygons
     }
-
 }
-
-
-
-
-

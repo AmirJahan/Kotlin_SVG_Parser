@@ -18,6 +18,14 @@ import kotlinx.serialization.Transient
 @Serializable
 class Artwork ()
 {
+    // TODO this is new
+    var title: String = ""
+
+
+
+
+
+
     var polygons: ArrayList<Polygon> = arrayListOf()
     var id: String = UUID.randomUUID().toString()
     var tags: ArrayList<String> = arrayListOf()

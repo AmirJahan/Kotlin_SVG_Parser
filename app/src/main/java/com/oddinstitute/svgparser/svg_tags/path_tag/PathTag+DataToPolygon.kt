@@ -16,6 +16,11 @@ fun PathTag.dataToPolygon(singlePathPieceString: String): Polygon
 
     var workingString = singlePathPieceString
 
+    // we make them open by default.
+    // for some reason in the init, i have it as true
+    // not sure why
+    thisPathPolygon.closed = false
+
     if (workingString.contains("Z"))
     {
         thisPathPolygon.closed = true
@@ -37,12 +42,8 @@ fun PathTag.dataToPolygon(singlePathPieceString: String): Polygon
                         .toTypedArray()
 
             for (each in thesePieces)
-            {
                 if (each.isNotEmpty())
-                {
                     piecesStringArr.add("$each")
-                }
-            }
         }
     }
 
@@ -56,14 +57,15 @@ fun PathTag.dataToPolygon(singlePathPieceString: String): Polygon
         {
             'M', 'm' -> pathValue.segments.add(movePiece(piece, tempCurPoint))
             'L', 'l', 'v', 'V', 'h', 'H' -> pathValue.segments.add(linePiece(piece, tempCurPoint) )// not relative
-            'C', 'c' -> pathValue.segments.add(curvePiece(piece, tempCurPoint))
+            'C', 'c' -> pathValue.segments.addAll(curvePiece(piece, tempCurPoint))
             'S', 's' -> pathValue.segments.add(smoothCurvePiece(piece, tempCurPoint, pathValue.segments.last()))
             'Q', 'q' -> pathValue.segments.add(quadPiece(piece, tempCurPoint))
             'T', 't' -> pathValue.segments.add(smoothQuadPiece(piece, tempCurPoint, pathValue.segments.last()))
             'a', 'A' -> pathValue.segments.addAll(arcPieces(piece, tempCurPoint)) // many pieces
         }
 
-        tempCurPoint = pathValue.segments.last().knot
+        if (pathValue.segments.count() != 0)
+            tempCurPoint = pathValue.segments.last().knot
     }
 
     // this is the pathValue that determines the shape of the polygon

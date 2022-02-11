@@ -44,4 +44,6 @@ dependencies {
 
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0"
 
+    implementation "com.pixplicity.sharp:library:1.1.0"
+
 }

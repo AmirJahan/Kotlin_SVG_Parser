@@ -2,7 +2,6 @@ package com.oddinstitute.svgparser.svg_to_artwork
 
 import android.util.Log
 import com.oddinstitute.svgparser.Artwork
-import com.oddinstitute.svgparser.polygon.Polygon
 import com.oddinstitute.svgparser.svg_tags.*
 import com.oddinstitute.svgparser.svg_tags.path_tag.PathTag
 import org.xmlpull.v1.XmlPullParser
@@ -40,6 +39,8 @@ fun SvgToArtwork.parse(inputStream: InputStream): Artwork
                             // here, we make a tag with parser
                             // and put it in the active group
                             activeGroup = Tag(parser)
+
+                            Log.d(SvgToArtwork::class.simpleName, "UY")
                         }
                         "svg" -> {
                             val svgTag = SvgTag(parser)
@@ -50,44 +51,44 @@ fun SvgToArtwork.parse(inputStream: InputStream): Artwork
                         "line" ->
                         {
                             val lineTag = LineTag(parser)
-                            val polygon = tagToPolygon(lineTag)
-                            artwork.polygons.add(polygon)
+                            val polygons = tagToPolygons(lineTag)
+                            artwork.polygons.addAll(polygons)
                         }
                         "rect" ->
                         {
-                            val rectTag = PolyTag(parser)
-                            val polygon = tagToPolygon(rectTag)
-                            artwork.polygons.add(polygon)
+                            val rectTag = RectTag(parser)
+                            val polygons = tagToPolygons(rectTag)
+                            artwork.polygons.addAll(polygons)
                         }
                         "polygon" ->
                         {
                             val polygonTag = PolyTag(parser, true)
-                            val polygon: Polygon = tagToPolygon(polygonTag)
-                            artwork.polygons.add(polygon)
+                            val polygons = tagToPolygons(polygonTag)
+                            artwork.polygons.addAll(polygons)
                         }
                         "polyline" ->
                         {
                             val polylineTag = PolyTag(parser) // default closed is false
-                            val polygon: Polygon = tagToPolygon(polylineTag)
-                            artwork.polygons.add(polygon)
+                            val polygons = tagToPolygons(polylineTag)
+                            artwork.polygons.addAll(polygons)
                         }
                         "circle" ->
                         {
                             val circleTag = CircleTag(parser)
-                            val polygon: Polygon = tagToPolygon(circleTag)
-                            artwork.polygons.add(polygon)
+                            val polygons = tagToPolygons(circleTag)
+                            artwork.polygons.addAll(polygons)
                         }
                         "ellipse" ->
                         {
-                            val ellipseTag = EllipseTag(parser)
-                            val polygon: Polygon = tagToPolygon(ellipseTag)
-                            artwork.polygons.add(polygon)
+                            val ellipseTag = OvalTag(parser)
+                            val polygons = tagToPolygons(ellipseTag)
+                            artwork.polygons.addAll(polygons)
                         }
                         "path" ->
                         { // this is different. Doesn't use decode, uues a different type
                             val pathTag = PathTag(parser)
-                            val polygon = tagToPolygon(pathTag)
-                            artwork.polygons.add(polygon)
+                            val polygons = tagToPolygons(pathTag)
+                            artwork.polygons.addAll(polygons)
                         }
 
 
@@ -124,18 +125,12 @@ fun SvgToArtwork.parse(inputStream: InputStream): Artwork
     }
 
 
-    // this is temp for debugging
-    val polygon = artwork.polygons[0]
-
-
-    // we reverse this here, because when we are drawing them on
-    // screen, we do it from bottom to top
-    artwork.polygons.reverse()
-
-
     // todo THESE HAVE TO BE ADDED LATER ON
     // this.makeDefaultMotionBundle()
     // findPivot()
+
+
+
 
     return artwork
 }

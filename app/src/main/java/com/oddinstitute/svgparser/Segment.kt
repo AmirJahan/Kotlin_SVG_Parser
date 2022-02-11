@@ -16,7 +16,8 @@ class Segment()
     }
 
 
-    constructor(t: PathType, k: PointF, c1: PointF?, c2: PointF?) : this (t)
+    // we changed this, made the c1 and c2 with defaults of null
+    constructor(t: PathType, k: PointF, c1: PointF? = null, c2: PointF? = null) : this (t)
     {
         type = t
         knot = k
@@ -47,21 +48,6 @@ class Segment()
 
     @Serializable(with = PointFAsStringSerializer::class)
     var cp2: PointF? = null
-
-
-    override fun toString(): String
-    {
-        var text = "Type: $type\n"
-
-        text += "knot: ${knot}\n"
-
-        cp1?.let { text += "cp1: $it\n" }
-        cp2?.let { text += "cp2: $it\n" }
-
-        return text
-    }
-
-
 
 
 

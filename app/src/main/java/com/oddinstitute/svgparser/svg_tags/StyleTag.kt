@@ -10,16 +10,15 @@ class StyleTag : Tag()
     // this tag reads the styles
     // associated with a SVG file
 
-
     fun decodeStyle(styleText: String): HashMap<String, SvgStyle>
     {
         val stylesMap: HashMap<String, SvgStyle> = hashMapOf()
 
 
-        // this section replaces the period at the beginning of styles with a "^", so
+        // this section replaces the period at the beginning of styles with a "|", so
         // we can use that to split the style
         var styleString: String = ""
-        for (i in 0 until styleText.count())
+        for (i in styleText.indices)
         {
             var char = styleText[i] // this character
 
@@ -30,7 +29,7 @@ class StyleTag : Tag()
                     if (!styleText[i + 1].isDigit()) // if the next one is not digit
                     {
                         // this is the starting ., let's replace
-                        char = '^'
+                        char = '|'
                     }
                 }
             }
@@ -40,14 +39,14 @@ class StyleTag : Tag()
 
 
         val pieces =
-            styleString.split("^")
+            styleString.split("|")
                     .toTypedArray()
 
         for (any in pieces)
         {
             val cleanPiece = any.cleanTags()
 
-            if (cleanPiece == "")
+            if (cleanPiece.isEmpty())
                 continue
 
 
@@ -80,7 +79,12 @@ fun String.styleValueDecoder(): SvgStyle
 {
     val svgStyle: SvgStyle = SvgStyle()
 
-    val components = this.split(";")
+    // in style, we have both the Equal sign and the colon,
+    // we replace equals with a colon
+    val components = this
+            .replace("=", ":")
+            .replace("\\s+".toRegex(), "") // remove multiple spaces
+                        .split(";")
 
     for (each in components)
     {
@@ -91,12 +95,18 @@ fun String.styleValueDecoder(): SvgStyle
         val key = keyVal[0]
         val value = keyVal[1]
 
-        if (key == "fill") svgStyle.fill = SvgColor.ofRaw(value)
-        if (key == "stroke") svgStyle.stroke = SvgColor.ofRaw(value)
-        if (key == "stroke-width") svgStyle.strokeWidth = value.toFloat()
-        if (key == "fill-rule") svgStyle.fillRule = SvgFillRule.ofRaw(value) // gets from enum
-        if (key == "clip-rule") svgStyle.clipRule = SvgClipRule.ofRaw(value)
-        if (key == "stroke-linecap") svgStyle.strokeLineCap = SvgLinecap.ofRaw(value)
+        when (key)
+        {
+            "fill" -> svgStyle.fill = SvgColor.ofRaw(value)
+            "stroke" -> svgStyle.stroke = SvgColor.ofRaw(value)
+            "stroke-width" -> svgStyle.strokeWidth = value.toFloat()
+            "fill-rule" -> svgStyle.fillRule = SvgFillRule.ofRaw(value) // gets from enum
+            "clip-rule" -> svgStyle.clipRule = SvgClipRule.ofRaw(value)
+            "stroke-linecap" -> svgStyle.strokeLineCap = SvgLinecap.ofRaw(value)
+        }
+
+
+
     }
 
     return svgStyle

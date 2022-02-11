@@ -3,6 +3,7 @@ package com.oddinstitute.svgparser.svg_tags.path_tag
 import android.graphics.PointF
 import com.oddinstitute.svgparser.PathType
 import com.oddinstitute.svgparser.Segment
+import com.oddinstitute.svgparser.operators.toFloat
 
 
 fun PathTag.linePiece(piece: String, curPoint: PointF): Segment
@@ -10,22 +11,28 @@ fun PathTag.linePiece(piece: String, curPoint: PointF): Segment
     val line = Segment(PathType.Line)
 
     val str = piece
-            .replace("L,", "")
             .replace("L", "")
-            .replace("l,", "")
             .replace("l", "")
-            .replace("V,", "")
             .replace("V", "")
-            .replace("v,", "")
             .replace("v", "")
-            .replace("H,", "")
             .replace("H", "")
-            .replace("h,", "")
             .replace("h", "")
+            .replace(" ", ",")
+            .replace(",,", ",") // it's possible to get two commas
 
 
 
-    val points = str.split(",")
+
+    val points = str
+            .split(",")
+
+
+    // if we are relative, we find the actual value based on the cur point
+    // this is simply a shortcut, when relative, we use curPoint, when not, we don't
+    // if not, we just add zero
+    val intCurPoint = curPoint * (  (piece[0] == 'l').toFloat() +
+                                    (piece[0] == 'h').toFloat() +
+                                    (piece[0] == 'v').toFloat()) // this combination is either zero or one
 
 
     when (piece[0])

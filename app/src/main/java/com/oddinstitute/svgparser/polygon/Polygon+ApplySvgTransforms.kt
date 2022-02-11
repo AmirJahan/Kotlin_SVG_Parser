@@ -2,6 +2,7 @@ package com.oddinstitute.svgparser.polygon
 
 import android.graphics.PointF
 import com.oddinstitute.svgparser.*
+import com.oddinstitute.svgparser.svg_elements.SvgMatrixTransform
 import com.oddinstitute.svgparser.svg_elements.SvgTransform
 import com.oddinstitute.svgparser.svg_elements.SvgTransformType
 import kotlin.math.cos
@@ -20,9 +21,33 @@ fun Polygon.applySvgTransforms(transforms: ArrayList<SvgTransform>)
             SvgTransformType.TRANSLATE -> this.svgTransformTranslate(trans)
             SvgTransformType.ROTATE -> this.svgTransformRotate(trans)
             SvgTransformType.SCALE -> this.svgTransformScale(trans)
+            SvgTransformType.MATRIX -> trans.matrix?.let { this.svgTransformMatrix(it) }
         }
     }
 }
+
+fun Polygon.svgTransformMatrix(matrix: SvgMatrixTransform)
+{
+    for (seg in this.shapeNode.pathValue.segments)
+    {
+        seg.knot.matrixTransform(matrix)
+        seg.cp1?.matrixTransform(matrix)
+        seg.cp2?.matrixTransform(matrix)
+    }
+    /*
+    newX = a * oldX + c * oldY + e = 3 * 10 - 1 * 10 + 30 = 50
+    newY = b * oldX + d * oldY + f = 1 * 10 + 3 * 10 + 40 = 80
+     */
+}
+
+fun PointF.matrixTransform (matrix: SvgMatrixTransform)
+{
+    this.x = matrix.a * this.x + matrix.c * this.y + matrix.e
+    this.y = matrix.b * this.x + matrix.d * this.y + matrix.f
+}
+
+
+
 
 
 fun Polygon.svgTransformTranslate(trans: SvgTransform)
@@ -39,7 +64,6 @@ fun Polygon.svgTransformRotate(trans: SvgTransform)
 
     for (segment in this.shapeNode.pathValue.segments)
         segment.rotate(angle, rotatePivot)
-
 }
 
 fun Polygon.svgTransformScale(trans: SvgTransform)
@@ -52,12 +76,20 @@ fun Polygon.svgTransformScale(trans: SvgTransform)
 }
 
 
-
 fun PointF.translate(offset: PointF)
 {
     this.x += offset.x
     this.y += offset.y
 }
+
+
+fun PointF.scaleThis(scale: PointF,
+                     pivot: PointF)
+{
+    this.x = (this.x - pivot.x) * scale.x + pivot.x
+    this.y = (this.y - pivot.y) * scale.y + pivot.y
+}
+
 
 
 
@@ -74,6 +106,8 @@ fun PointF.scale(scale: PointF,
     return PointF(x,
                   y)
 }
+
+
 
 
 fun Segment.rotate(angle: Float, pivot: PointF)

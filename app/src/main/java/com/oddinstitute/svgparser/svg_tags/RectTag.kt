@@ -9,7 +9,7 @@ import org.xmlpull.v1.XmlPullParser
 
 class RectTag (val parser: XmlPullParser): Tag(parser)
 {
-    override fun decode(): Polygon
+    override fun decode(): ArrayList<Polygon>
     {
         val segments: ArrayList<Segment> = arrayListOf()
 
@@ -17,6 +17,9 @@ class RectTag (val parser: XmlPullParser): Tag(parser)
         var y1 = 0f
         var x2 = 0f
         var y2 = 0f
+
+        var width = 0f
+        var height = 0f
 
         parser.getAttributeValue(null, "x")?.let {
             x1 = it.toFloat()
@@ -34,31 +37,33 @@ class RectTag (val parser: XmlPullParser): Tag(parser)
 
 
         parser.getAttributeValue(null, "width")?.let {
-            x2 = it.toFloat() + x1
+            width = it.toFloat()
         }
 
+        x2 = width + x1
         val line1Seg = Segment(PathType.Line)
         line1Seg.knot = PointF(x2, y1)
         segments.add(line1Seg)
 
 
         parser.getAttributeValue(null, "height")?.let {
-            y2 = it.toFloat() + y1
+            height = it.toFloat()
         }
 
+        y2 = height + y1
         val line2Seg = Segment(PathType.Line)
         line2Seg.knot = PointF(x2, y2)
         segments.add(line2Seg)
 
 
         val line3Seg = Segment(PathType.Line)
-        line3Seg.knot = PointF(x2 - x1, y2)
+        line3Seg.knot = PointF(x2 - width, y2)
         segments.add(line3Seg)
 
         val polygon: Polygon = Polygon()
         polygon.shapeNode.pathValue = PathValue(segments)
         polygon.closed = true
 
-        return polygon
+        return arrayListOf(polygon)
     }
 }

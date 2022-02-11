@@ -10,20 +10,20 @@ fun PathTag.smoothCurvePiece(piece: String, curPoint: PointF, prevSegment: Segme
     // here, if the first letter was -, then we have like ("s,-4,17.8,-8.9,17.8")
     // so, we check and clean for both "s," and "s"
 
-    val str = piece.replace("s,", "")
-            .replace("S,", "")
+    val str = piece
             .replace("s", "")
             .replace("S", "")
-            .replace(",,", ",")
             .replace(" ", ",")
+            .replace(",,", ",") // it's possible to get two commas
 
-    val points = str.split(",")
+    // smooths have 4 pieces, SO
+    val points = str
+            .split(",")
 
-    // if we are relative, we find the actual value
+    // if we are relative, we find the actual value based on the cur point
+    // this is simply a shortcut, when relative, we use curPoint, when not, we don't
     // if not, we just add zero
-    var intCurPoint = PointF() // 0, 0
-    if (piece[0] == 's') // relative
-        intCurPoint = curPoint
+    val intCurPoint = curPoint * (piece[0] == 's').toFloat()
 
     val smooth = Segment(PathType.SmoothCurve)
     smooth.cp2 = PointF(points[0].toFloat() + intCurPoint.x,

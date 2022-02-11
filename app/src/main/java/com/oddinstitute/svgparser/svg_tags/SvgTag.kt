@@ -20,8 +20,12 @@ class SvgTag(val parser: XmlPullParser)
         // general SVG cleaner
         val viewBoxCleaned = viewBoxString.cleanTags()
 
+
+        // SVG ViewBox can have either space or commas
         val pieces =
-            viewBoxCleaned.split("(?= )".toRegex())
+            viewBoxCleaned.replace(" ", ",")
+                    .replace(",,", ",") // it's possible to get two commas
+                    .split(",")
                     .toTypedArray()
 
 
@@ -30,9 +34,10 @@ class SvgTag(val parser: XmlPullParser)
 
         var large: Float = height // actual height is the difference
         if (width > large) // actual width is the difference
-            large = pieces[2].toFloat()
+            large = width
 
-
+        // our assumption is that all SVGs are read at a size that is 512
+        // this is either on the x or y
         val scaleFactor = 512.0f / large
         val offset = PointF(pieces[0].toFloat(), pieces[1].toFloat())
 

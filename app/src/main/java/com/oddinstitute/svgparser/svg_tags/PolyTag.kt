@@ -11,23 +11,33 @@ import org.xmlpull.v1.XmlPullParser
 // if it is polygon, it will be closed
 class PolyTag(val parser: XmlPullParser, var closed: Boolean = false) : Tag(parser)
 {
-    override fun decode(): Polygon
+    override fun decode(): ArrayList<Polygon>
     {
+        // for polygon, we assume the values are always paired
+        // like x,y x2,y2 x3,y3 and so on
+        // split character is "space"
+
+
         val polygon: Polygon = Polygon()
         polygon.closed = closed
         val segments: ArrayList<Segment> = arrayListOf()
 
         parser.getAttributeValue(null, "points")?.let {
 
-            val polygonsCleaned = it.cleanTags()
-            val pointsComponents = polygonsCleaned.split(" ")
+            var polygonsCleaned = it.cleanTags()
 
+            // it turns our polylines can have either SPACES or COMMAS to separate pairs
+            // for instance 20,20,40,25,60,40 is the same as 20,20 40,25 60,40
+            // to eliminate this problem, we replace SPACES with COMMAS
 
-            for (i in 0 until pointsComponents.count())
+            polygonsCleaned = polygonsCleaned.replace(" ", ",")
+            val pointsComponents = polygonsCleaned.split(",")
+
+            // we go through these every 2
+            for (i in 0 until pointsComponents.count() step 2)
             {
-                val eachPoint = pointsComponents[i]
-                val xyComponent = eachPoint.split(",")
-
+                val xValue = pointsComponents[i].toFloat()
+                val yValue = pointsComponents[i+1].toFloat()
 
                 val segment = Segment()
 
@@ -35,7 +45,7 @@ class PolyTag(val parser: XmlPullParser, var closed: Boolean = false) : Tag(pars
                 else segment.type = PathType.Line // otherwise, we draw a line
 
 
-                segment.knot = PointF(xyComponent[0].toFloat(), xyComponent[1].toFloat())
+                segment.knot = PointF(xValue, yValue)
 
                 // at the end, add to the segments
                 segments.add(segment)
@@ -47,6 +57,6 @@ class PolyTag(val parser: XmlPullParser, var closed: Boolean = false) : Tag(pars
             polygon.shapeNode.pathValue = PathValue(segments)
         }
 
-        return polygon
+        return arrayListOf(polygon)
     }
 }

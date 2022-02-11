@@ -2,6 +2,7 @@ package com.oddinstitute.svgparser.svg_tags
 
 import android.graphics.Color
 import com.oddinstitute.svgparser.*
+import com.oddinstitute.svgparser.operators.decodeTransform
 import com.oddinstitute.svgparser.polygon.Polygon
 import com.oddinstitute.svgparser.svg_elements.*
 import org.xmlpull.v1.XmlPullParser
@@ -30,11 +31,13 @@ open class Tag()
     constructor(parser: XmlPullParser): this()
     {
         parser.getAttributeValue(null, "fill")?.let {
-            this.fill = SvgColor.ofRaw(it)
+            if (it != "none")
+                this.fill = SvgColor.ofRaw(it)
         }
 
         parser.getAttributeValue(null, "stroke")?.let {
-            this.stroke = SvgColor.ofRaw(it)
+            if (it != "none")
+                this.stroke = SvgColor.ofRaw(it)
         }
 
         parser.getAttributeValue(null, "stroke-width")?.let {
@@ -66,9 +69,11 @@ open class Tag()
         }
     }
 
-    open fun decode (): Polygon
+
+    // this function returns an array, because for the paths, we might have more than one piece
+    // others return singular objects, but path might return multiple objects
+    open fun decode (): ArrayList<Polygon>
     {
-        // not sure if this is a right way
-        return Polygon()
+        return arrayListOf()
     }
 }

@@ -12,6 +12,8 @@ import kotlinx.serialization.Serializable
 class Polygon ()
 {
     var shapeNode: ShapeNode = ShapeNode()
+
+
     var closed: Boolean = true
 
 
@@ -67,20 +69,26 @@ class Polygon ()
         @Exclude get() { return field }
 
 
+     */
     // thi path is used in the SVG draw app.  We should see if we still need it
     @Transient
     var mainPath: Path = Path()
-        @Exclude get() { return field }
+       // @Exclude get() { return field } FIREBASE ONLY
+
 
     @Transient
     var newGuidesPath: Path? = null
-        @Exclude get() { return field }
+       //  @Exclude get() { return field } FIREBASE ONLY
 
+
+
+    /*
     @Transient
     // this is the playable motion that is aggregated for playback time
     var motion: Motion = Motion("Polygon Motion")
         @Exclude get() { return field }
 
      */
+
 }
 

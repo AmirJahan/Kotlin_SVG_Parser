@@ -9,7 +9,7 @@ import org.xmlpull.v1.XmlPullParser
 
 class LineTag(val parser: XmlPullParser): Tag(parser)
 {
-    override fun decode(): Polygon
+    override fun decode(): ArrayList<Polygon>
     {
         val segments: ArrayList<Segment> = arrayListOf()
 
@@ -49,6 +49,6 @@ class LineTag(val parser: XmlPullParser): Tag(parser)
         polygon.shapeNode.pathValue = PathValue(segments)
         polygon.closed = false
 
-        return polygon
+        return arrayListOf(polygon)
     }
 }
