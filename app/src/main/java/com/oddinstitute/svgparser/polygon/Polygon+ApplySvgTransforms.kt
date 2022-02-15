@@ -14,7 +14,7 @@ fun Polygon.applySvgTransforms(transforms: ArrayList<SvgTransform>)
     // we ordered them when we were combining
     // so, they have to be applied in order
 
-    for (trans in transforms)
+    for (trans in transforms.reversed())
     {
         when (trans.type)
         {
@@ -30,20 +30,29 @@ fun Polygon.svgTransformMatrix(matrix: SvgMatrixTransform)
 {
     for (seg in this.shapeNode.pathValue.segments)
     {
-        seg.knot.matrixTransform(matrix)
-        seg.cp1?.matrixTransform(matrix)
-        seg.cp2?.matrixTransform(matrix)
+        seg.knot = seg.knot.matrixTransform(matrix)
+        seg.cp1?.let {
+            seg.cp1 = it.matrixTransform(matrix)
+        }
+        seg.cp2?.let {
+            seg.cp2 = it.matrixTransform(matrix)
+        }
     }
     /*
+        newX = a * oldX + c * oldY + e = 3 * 10 - 1 * 10 + 30 = 50
+        newY = b * oldX + d * oldY + f = 1 * 10 + 3 * 10 + 40 = 80
+
     newX = a * oldX + c * oldY + e = 3 * 10 - 1 * 10 + 30 = 50
     newY = b * oldX + d * oldY + f = 1 * 10 + 3 * 10 + 40 = 80
      */
 }
 
-fun PointF.matrixTransform (matrix: SvgMatrixTransform)
+fun PointF.matrixTransform (matrix: SvgMatrixTransform): PointF
 {
-    this.x = matrix.a * this.x + matrix.c * this.y + matrix.e
-    this.y = matrix.b * this.x + matrix.d * this.y + matrix.f
+    val x = matrix.a * this.x + matrix.c * this.y + matrix.e
+    val y = matrix.b * this.x + matrix.d * this.y + matrix.f
+
+    return PointF(x, y)
 }
 
 
@@ -72,7 +81,10 @@ fun Polygon.svgTransformScale(trans: SvgTransform)
                              trans.y)
 
     for (segment in this.shapeNode.pathValue.segments)
-        segment.scale(scaleFactor, this.findOrigin())
+        segment.scale(scaleFactor, PointF())
+
+    // scale in SVG is against the origin of the scene, not the object
+//    segment.scale(scaleFactor, this.findOrigin())
 }
 
 

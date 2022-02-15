@@ -8,14 +8,17 @@
     tools:context=".MainActivity">
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginStart="30dp"
         android:layout_marginTop="10dp"
+        android:layout_marginEnd="30dp"
         android:layout_marginBottom="30dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/newArtworkButton"
-        app:layout_constraintStart_toStartOf="@+id/newArtworkButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/artworkTitleTextView">
 
         <FrameLayout
@@ -37,16 +40,15 @@
             android:background="#FFFFFF" />
 
     </LinearLayout>
+
     <Button
         android:id="@+id/newArtworkButton"
         android:layout_width="0dp"
         android:layout_height="64dp"
-        android:layout_marginStart="30dp"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="30dp"
-        android:text="New Artwork"
+        android:text="Next Artwork"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -55,7 +57,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:text="Artwork Title"
-        app:layout_constraintStart_toStartOf="@+id/newArtworkButton"
+        app:layout_constraintStart_toStartOf="@+id/linearLayout"
         app:layout_constraintTop_toBottomOf="@+id/newArtworkButton" />
 
     <TextView
@@ -69,6 +71,17 @@
         app:layout_constraintEnd_toEndOf="@+id/newArtworkButton"
         app:layout_constraintStart_toStartOf="@+id/textView"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <Button
+        android:id="@+id/prevButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="30dp"
+        android:text="Prev Artwork"
+        app:layout_constraintBottom_toBottomOf="@+id/newArtworkButton"
+        app:layout_constraintEnd_toStartOf="@+id/newArtworkButton"
+        app:layout_constraintStart_toStartOf="@+id/textView"
+        app:layout_constraintTop_toTopOf="@+id/newArtworkButton" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

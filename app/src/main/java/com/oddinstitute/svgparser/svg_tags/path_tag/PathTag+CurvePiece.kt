@@ -39,7 +39,6 @@ fun PathTag.curvePiece(piece: String, curPoint: PointF): ArrayList<Segment>
     {
         val curve = Segment(PathType.Curve)
 
-
         // if we are relative, we find the actual value based on the cur point
         // this is simply a shortcut, when relative, we use curPoint, when not, we don't
         // if not, we just add zero

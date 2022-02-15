@@ -16,7 +16,8 @@ class SvgToArtwork
     var curTagName: String? = null
 
     // if we are currently inside a group, we remember that
-    var activeGroup: Tag? = null
+//    var activeGroup: Tag? = null
+    var currentGroups: ArrayList<Tag> = arrayListOf()
 
     // if there are styles at the beginning of the SVG file
     // we place them here

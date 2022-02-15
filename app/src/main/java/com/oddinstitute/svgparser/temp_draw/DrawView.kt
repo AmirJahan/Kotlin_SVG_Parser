@@ -2,16 +2,12 @@ package com.oddinstitute.svgparser.temp_draw
 
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Path
+import android.graphics.*
 import android.view.View
 import androidx.core.graphics.toColor
 import com.oddinstitute.svgparser.Artwork
 import com.oddinstitute.svgparser.PathType
 import com.oddinstitute.svgparser.polygon.Polygon
-
 
 class DrawView(context: Context) : View(context)
 {
@@ -19,10 +15,16 @@ class DrawView(context: Context) : View(context)
 
    var paint: Paint = Paint()
 
+
+    lateinit var tempPath : Path
+
     init
     {
         paint = Paint()
         paint.isAntiAlias = true
+
+
+        tempPath = Path()
     }
 
     fun redraw (art: Artwork)
@@ -34,7 +36,6 @@ class DrawView(context: Context) : View(context)
             poly.makePath()
         }
 
-
         this.invalidate()
     }
 
@@ -43,6 +44,23 @@ class DrawView(context: Context) : View(context)
 
     override fun onDraw(canvas: Canvas)
     {
+//        tempPath.moveTo(150f,0f)
+//        tempPath.lineTo(121f, 90f)
+//        tempPath.lineTo(198f, 35f)
+//        tempPath.lineTo(102f, 35f)
+//        tempPath.lineTo(179f, 90f)
+//        tempPath.close()
+//        tempPath.fillType = Path.FillType.EVEN_ODD
+//
+//
+//
+//        paint.style = Paint.Style.FILL
+//        paint.color = Color.RED
+//        paint.clearShadowLayer()
+//
+//        canvas.drawPath(tempPath, paint)
+
+
         artwork?.let {
             drawArtwork(canvas, it)
         }
@@ -57,6 +75,7 @@ fun DrawView.drawArtwork(canvas: Canvas, artwork: Artwork)
         // fill
         if (polygon.shapeNode.fillColor != Color.TRANSPARENT.toColor())
         {
+
             styleFillPaint(polygon)
             canvas.drawPath(polygon.mainPath,
                             paint)
@@ -76,16 +95,23 @@ fun DrawView.styleFillPaint(polygon: Polygon)
 {
     paint.style = Paint.Style.FILL
 
+
+
     polygon.shapeNode.filColorApplied.let {
         paint.color = it.toArgb()
     }
 
     // paint.color = Color.RED
     paint.strokeCap = polygon.strokeLineCap
+
+    paint.strokeJoin = polygon.strokeLineJoin
+
     paint.pathEffect = null
     paint.clearShadowLayer()
 }
 
+
+// todo important
 fun DrawView.styleStrokePaint(polygon: Polygon)
 {
     polygon.shapeNode.strokeWidth.let { width ->
@@ -94,9 +120,19 @@ fun DrawView.styleStrokePaint(polygon: Polygon)
         polygon.shapeNode.strokeColorApplied.let {
             paint.color = it.toArgb()
         }
+
         paint.strokeCap = polygon.strokeLineCap
         paint.pathEffect = null
         paint.clearShadowLayer()
+
+
+        polygon.dashArray?.let {
+            paint.pathEffect = DashPathEffect(floatArrayOf(it, it), 0f)
+
+        }
+
+            paint.strokeJoin = polygon.strokeLineJoin
+
     }
 }
 
@@ -108,6 +144,7 @@ fun DrawView.styleStrokePaint(polygon: Polygon)
 // TODO
 // THIS IS TEMPORARY.
 // IT'S DIFFERENT THAN THE ACTUAL THING IN MOUSH
+// TODO IMPORTANT -> this.mainPath.fillType should go to moush
 fun Polygon.makePath()
 {
     // before thishappens, there is always
@@ -116,6 +153,10 @@ fun Polygon.makePath()
 
 // Multiple cycles are printing at the beginning
     this.mainPath = Path()
+
+    // todo
+    this.mainPath.fillType = this.fillType
+
     for (piece in this.shapeNode.pathValue.segments)
     {
 

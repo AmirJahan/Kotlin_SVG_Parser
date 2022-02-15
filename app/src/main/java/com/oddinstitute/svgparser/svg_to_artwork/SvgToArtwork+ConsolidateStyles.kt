@@ -36,6 +36,8 @@ fun SvgToArtwork.consolidateStyles(tag: Tag): SvgStyle
     tag.fillRule?.let { elemeLevel.fillRule = it }
     tag.clipRule?.let { elemeLevel.clipRule = it }
     tag.strokeLineCap?.let { elemeLevel.strokeLineCap = it }
+    tag.strokeDashArray?.let { elemeLevel.strokeDashArray = it }
+    tag.strokeLineJoin?.let { elemeLevel.strokeLineJoin = it }
 
 
 
@@ -78,6 +80,15 @@ fun SvgToArtwork.consolidateStyles(tag: Tag): SvgStyle
     elemeLevel.strokeLineCap?.let { outStyle.strokeLineCap = it }
     classLevel.strokeLineCap?.let { outStyle.strokeLineCap = it }
     styleLevel.strokeLineCap?.let { outStyle.strokeLineCap = it }
+
+    elemeLevel.strokeLineJoin?.let { outStyle.strokeLineJoin = it }
+    classLevel.strokeLineJoin?.let { outStyle.strokeLineJoin = it }
+    styleLevel.strokeLineJoin?.let { outStyle.strokeLineJoin = it }
+
+
+    elemeLevel.strokeDashArray?.let { outStyle.strokeDashArray = it }
+    classLevel.strokeDashArray?.let { outStyle.strokeDashArray = it }
+    styleLevel.strokeDashArray?.let { outStyle.strokeDashArray = it }
 
 
     return outStyle

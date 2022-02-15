@@ -1,6 +1,7 @@
 package com.oddinstitute.svgparser.svg_elements
 
 import android.graphics.Color
+import com.oddinstitute.svgparser.operators.roundTwoDecimals
 
 /*
  #rgb | #CDF
@@ -324,6 +325,7 @@ enum class SvgColor(val rgb: RGB)
     {
         fun ofRaw(colString: String): Color
         {
+            var color: Color = Color()
             when
             {
                 colString[0] == '#' -> // for hexadecimal values
@@ -333,7 +335,7 @@ enum class SvgColor(val rgb: RGB)
 
 //                Log.d(SvgColor::class.simpleName, "Color is: $colorHex")
 
-                    return Color.valueOf(colorHex)
+                    color = Color.valueOf(colorHex)
 
                 }
                 colString.contains("rgb") -> // for both rgb types
@@ -371,10 +373,7 @@ enum class SvgColor(val rgb: RGB)
                         b = colorPieces[2].toFloat() / 255f
                     }
 
-                    val color: Color = Color.valueOf(r, g, b)
-
-                    return color
-
+                    color = Color.valueOf(r, g, b)
                 }
                 else -> // for color keywords
                 {
@@ -386,14 +385,22 @@ enum class SvgColor(val rgb: RGB)
                     val b = fromRaw.rgb.b
 
                     val colorHexString = java.lang.String.format("#%02x%02x%02x", r, g, b)
-                    val color: Int = Color.parseColor(colorHexString)
+                    val intColor: Int = Color.parseColor(colorHexString)
 
-                    return Color.valueOf(color)
+                    color = Color.valueOf(intColor)
                 }
             }
+
+
+            return color.roundTwoDecimals()
+            println("")
         }
     }
 }
+
+
+
+
 
 
 // todo this exists in Moush

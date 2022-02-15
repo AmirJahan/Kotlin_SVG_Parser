@@ -3,7 +3,7 @@ package com.oddinstitute.svgparser.polygon
 import com.oddinstitute.svgparser.svg_elements.SvgStyle
 
 
-fun Polygon.applySvgStyleT(style: SvgStyle)
+fun Polygon.applySvgStyle(style: SvgStyle)
 {
     // these three are in the shape node, because they are animatable
     style.fill?.let { this.shapeNode.fillColor = it }
@@ -26,6 +26,16 @@ fun Polygon.applySvgStyleT(style: SvgStyle)
     style.clipRule?.let { svgClipRule ->
         svgClipRule.toType()?.let {
             this.clipRule = it
+        }
+    }
+
+    style.strokeDashArray?.let {
+        this.dashArray = it
+    }
+
+    style.strokeLineJoin?.let { svgStrokeLineJoin ->
+        svgStrokeLineJoin.toType()?.let {
+            this.strokeLineJoin = it
         }
     }
 }

@@ -18,6 +18,8 @@ open class Tag()
     open var fillRule: SvgFillRule? = null
     open var clipRule: SvgClipRule? = null
     open var strokeLineCap: SvgLinecap? = null // butt | round | square
+    open var strokeLineJoin: SvgStrokeLineJoin? = null
+    open var strokeDashArray: Float? = null // butt | round | square
 
     open var transforms: ArrayList<SvgTransform>? = null
 
@@ -37,7 +39,11 @@ open class Tag()
 
         parser.getAttributeValue(null, "stroke")?.let {
             if (it != "none")
+            {
                 this.stroke = SvgColor.ofRaw(it)
+                this.strokeWidth = 1.0f // if there's a stroke color, then there's a stroke
+                // in the next code, this might be updated with the actual stroke width
+            }
         }
 
         parser.getAttributeValue(null, "stroke-width")?.let {
@@ -46,6 +52,10 @@ open class Tag()
 
         parser.getAttributeValue(null, "stroke-linecap")?.let {
             this.strokeLineCap = SvgLinecap.ofRaw(it)
+        }
+
+        parser.getAttributeValue(null, "stroke-dasharray")?.let {
+            this.strokeDashArray = it.toFloat()
         }
 
         parser.getAttributeValue(null, "transform")?.let {
@@ -58,6 +68,10 @@ open class Tag()
 
         parser.getAttributeValue(null, "clip-rule")?.let {
             this.clipRule = SvgClipRule.ofRaw(it)
+        }
+
+        parser.getAttributeValue(null, "stroke-linejoin")?.let {
+            this.strokeLineJoin = SvgStrokeLineJoin.ofRaw(it)
         }
 
         parser.getAttributeValue(null, "style")?.let {

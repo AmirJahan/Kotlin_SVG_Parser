@@ -11,6 +11,8 @@ class SvgStyle
     var fillRule: SvgFillRule? = null
     var clipRule: SvgClipRule? = null
     var strokeLineCap: SvgLinecap? = null // butt | round | square
+    var strokeDashArray: Float? = null // butt | round | square
+    var strokeLineJoin: SvgStrokeLineJoin? = null // butt | round | square
 
 
     override fun toString(): String

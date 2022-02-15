@@ -56,10 +56,10 @@ fun PathTag.dataToPolygon(singlePathPieceString: String): Polygon
         when (piece[0])
         {
             'M', 'm' -> pathValue.segments.add(movePiece(piece, tempCurPoint))
-            'L', 'l', 'v', 'V', 'h', 'H' -> pathValue.segments.add(linePiece(piece, tempCurPoint) )// not relative
+            'L', 'l', 'v', 'V', 'h', 'H' -> pathValue.segments.addAll(linePiece(piece, tempCurPoint) )// not relative
             'C', 'c' -> pathValue.segments.addAll(curvePiece(piece, tempCurPoint))
-            'S', 's' -> pathValue.segments.add(smoothCurvePiece(piece, tempCurPoint, pathValue.segments.last()))
-            'Q', 'q' -> pathValue.segments.add(quadPiece(piece, tempCurPoint))
+            'S', 's' -> pathValue.segments.addAll(smoothCurvePiece(piece, tempCurPoint, pathValue.segments.last()))
+            'Q', 'q' -> pathValue.segments.addAll(quadPiece(piece, tempCurPoint))
             'T', 't' -> pathValue.segments.add(smoothQuadPiece(piece, tempCurPoint, pathValue.segments.last()))
             'a', 'A' -> pathValue.segments.addAll(arcPieces(piece, tempCurPoint)) // many pieces
         }
@@ -76,3 +76,10 @@ fun PathTag.dataToPolygon(singlePathPieceString: String): Polygon
 
     return thisPathPolygon
 }
+
+
+
+
+
+
+

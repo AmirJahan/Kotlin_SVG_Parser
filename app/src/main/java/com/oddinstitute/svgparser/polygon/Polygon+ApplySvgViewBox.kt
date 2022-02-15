@@ -8,8 +8,8 @@ fun Polygon.applySvgViewBox(scaleFactor: Float, offset: PointF)
 {
 //    val newSegments: ArrayList<Segment> = arrayListOf()
 
-
     this.shapeNode.strokeWidth *= scaleFactor
+    this.dashArray?.let {  this.dashArray = it * scaleFactor }
 
 
     for (segment in this.shapeNode.pathValue.segments)
@@ -22,7 +22,6 @@ fun Polygon.applySvgViewBox(scaleFactor: Float, offset: PointF)
         segment.knot.scale(scaleFactor, PointF())
         segment.cp1?.scale(scaleFactor, PointF())
         segment.cp2?.scale(scaleFactor, PointF())
-
     }
 }
 

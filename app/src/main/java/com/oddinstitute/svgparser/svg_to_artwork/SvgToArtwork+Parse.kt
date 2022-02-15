@@ -38,7 +38,8 @@ fun SvgToArtwork.parse(inputStream: InputStream): Artwork
                             // we set the active group
                             // here, we make a tag with parser
                             // and put it in the active group
-                            activeGroup = Tag(parser)
+//                            activeGroup = Tag(parser)
+                            currentGroups.add(Tag(parser))
 
                             Log.d(SvgToArtwork::class.simpleName, "UY")
                         }
@@ -106,7 +107,7 @@ fun SvgToArtwork.parse(inputStream: InputStream): Artwork
                         "style" -> styleTag() // this must be at the end
 
                         // when we end the group, it should become inactive
-                        "g" -> activeGroup = null
+                        "g" -> currentGroups.removeLast() //  activeGroup = null
                     }
 
                     curTagName = null

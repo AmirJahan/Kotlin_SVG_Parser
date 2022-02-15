@@ -6,11 +6,14 @@ import com.oddinstitute.svgparser.Segment
 import com.oddinstitute.svgparser.operators.toFloat
 
 
-fun PathTag.linePiece(piece: String, curPoint: PointF): Segment
+fun PathTag.linePiece(piece: String, curPoint: PointF): ArrayList<Segment>
 {
-    val line = Segment(PathType.Line)
+    val segments = arrayListOf<Segment>()
 
     val str = piece
+            .trimStart()
+            .trimEnd()
+            .trim()
             .replace("L", "")
             .replace("l", "")
             .replace("V", "")
@@ -23,6 +26,7 @@ fun PathTag.linePiece(piece: String, curPoint: PointF): Segment
 
 
 
+
     val points = str
             .split(",")
 
@@ -30,35 +34,68 @@ fun PathTag.linePiece(piece: String, curPoint: PointF): Segment
     // if we are relative, we find the actual value based on the cur point
     // this is simply a shortcut, when relative, we use curPoint, when not, we don't
     // if not, we just add zero
-    val intCurPoint = curPoint * (  (piece[0] == 'l').toFloat() +
+    var intCurPoint = curPoint * (  (piece[0] == 'l').toFloat() +
                                     (piece[0] == 'h').toFloat() +
                                     (piece[0] == 'v').toFloat()) // this combination is either zero or one
+
 
 
     when (piece[0])
     {
         // line to new x and y
-        'L' -> line.knot = PointF(points[0].toFloat(), points[1].toFloat())
+        'L', 'l' -> {
+            for (i in 0 until points.count() step 2)
+            {
+                val line = Segment(PathType.Line)
 
-        // line from current to x and y
-        'l' -> line.knot =
-            PointF(points[0].toFloat() + curPoint.x, points[1].toFloat() + curPoint.y)
+                if (piece[0] == 'l' && segments.count() > 0)
+                    intCurPoint = segments.last().knot
+
+                line.knot = PointF(points[i].toFloat() + intCurPoint.x, points[i+1].toFloat() + intCurPoint.y)
+                segments.add(line)
+            }
+        }
+
 
         // line from current point horizontally relative to the new x
-        'h' -> line.knot = PointF(points[0].toFloat() + curPoint.x, curPoint.y)
+        'h', 'H' ->
+        {
+            for (i in 0 until points.count() step 2)
+            {
+                val line = Segment(PathType.Line)
 
-        // line from current point, horizontally to the new x value (not relative)
-        'H' -> line.knot = PointF(points[0].toFloat(), curPoint.y)
+                if (piece[0] == 'h' && segments.count() > 0)
+                    intCurPoint = segments.last().knot
+
+                line.knot = PointF(points[0].toFloat() + intCurPoint.x, intCurPoint.y)
+                segments.add(line)
+            }
+        }
+
 
 
         // THESE TWO ARE ALSO points[0], because there is only one value after H or V
         // line from current point vertically relative to the new y
-        'v' -> line.knot = PointF(curPoint.x, points[0].toFloat() + curPoint.y)
+        'v', 'V' ->{
+            for (i in 0 until points.count() step 2)
+            {
+                val line = Segment(PathType.Line)
 
-        // line from current point vertically to the new y value (not relative)
-        'V' -> line.knot = PointF(curPoint.x, points[0].toFloat())
+                if (piece[0] == 'v' && segments.count() > 0)
+                    intCurPoint = segments.last().knot
+
+                line.knot = PointF(intCurPoint.x, points[0].toFloat() + intCurPoint.y)
+                segments.add(line)
+            }
+        }
     }
 
 
-    return line
+
+
+
+
+
+
+    return segments
 }

@@ -38,8 +38,7 @@ class StyleTag : Tag()
         }
 
 
-        val pieces =
-            styleString.split("|")
+        val pieces = styleString.split("|")
                     .toTypedArray()
 
         for (any in pieces)
@@ -103,6 +102,8 @@ fun String.styleValueDecoder(): SvgStyle
             "fill-rule" -> svgStyle.fillRule = SvgFillRule.ofRaw(value) // gets from enum
             "clip-rule" -> svgStyle.clipRule = SvgClipRule.ofRaw(value)
             "stroke-linecap" -> svgStyle.strokeLineCap = SvgLinecap.ofRaw(value)
+            "stroke-dasharray" -> svgStyle.strokeDashArray = value.toFloat()
+            "stroke-linejoin" -> svgStyle.strokeLineJoin = SvgStrokeLineJoin.valueOf(value)
         }
 
 

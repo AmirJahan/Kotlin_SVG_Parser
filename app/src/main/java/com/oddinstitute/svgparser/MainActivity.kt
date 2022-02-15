@@ -18,13 +18,24 @@ import java.util.*
 import kotlin.collections.ArrayList
 import android.widget.ImageView
 import com.pixplicity.sharp.Sharp
-import java.io.InputStream
+
+
+//todo: once the viewbox scale happened, make everything two point decimals
+//maybe do this for everything
+
+
+// todo
+//draw a path manually woth the cube example on the pather
+//// to understand the evenodd
+
+
+// todo
+// fit object to a 512
 
 
 class MainActivity : AppCompatActivity()
 {
-
-    var curIndex = 1400
+    var curIndex = 0 // we checked up to 850, recheck from there
     lateinit var files: ArrayList<String>
 
     lateinit var drawView: DrawView
@@ -36,43 +47,9 @@ class MainActivity : AppCompatActivity()
     {
         override fun handleMessage(msg: Message)
         {
-
             curIndex %= files.count()
 
-            val file = files[curIndex]
-            try
-            {
-                // MINE
-                val parser = SvgToArtwork()
-                val istream = assets.open("svgs/$file")
-                Log.d(MainActivity::class.simpleName, "i: $curIndex : $file")
-                val artwork = parser.parse(istream)
-                artwork.title = file
-                drawView.redraw(artwork)
-                istream.close()
-                titleTextView.text = artwork.title
-
-
-
-                // OTHER
-//                Handler(Looper.getMainLooper()).postDelayed({
-                    val istream2 = assets.open("svgs/$file")
-                    Sharp.loadInputStream(istream2).into(svgImageView)
-                    istream2.close()
-
-//                                                            }, 500)
-
-
-
-
-
-
-                curIndex++
-
-            } catch (e: IOException)
-            {
-                e.printStackTrace()
-            }
+            runArtwork ()
         }
     }
 
@@ -90,6 +67,12 @@ class MainActivity : AppCompatActivity()
 
         drawView = DrawView(this)
         findViewById<FrameLayout>(R.id.canvasId).addView(drawView)
+
+
+
+
+
+
         titleTextView = findViewById<TextView>(R.id.artworkTitleTextView)
 
         svgImageView = findViewById(R.id.svgImageViewId)
@@ -110,13 +93,15 @@ class MainActivity : AppCompatActivity()
 
 
             // READER SVG
-            Handler(Looper.getMainLooper()).postDelayed({
-                                                            val istream2 = assets.open("mysvg.svg")
-                                                            Sharp.loadInputStream(istream2)
-                                                                    .into(svgImageView)
-                                                            istream2.close()
+            Handler(Looper
+                            .getMainLooper())
+                    .postDelayed({
+                                     val istream2 = assets.open("mysvg.svg")
+                                     Sharp.loadInputStream(istream2)
+                                             .into(svgImageView)
+                                     istream2.close()
 
-                                                        }, 500)
+                                 }, 500)
 
 
 
@@ -134,20 +119,64 @@ class MainActivity : AppCompatActivity()
 
         findViewById<Button>(R.id.newArtworkButton).setOnClickListener {
 
-//            var playTimer: Timer? = null
+            // runSequence()
 
-            Timer().scheduleAtFixedRate(object : TimerTask()
-                                        {
-                                            override fun run()
-                                            {
-                                                timerHandler.obtainMessage(1)
-                                                        .sendToTarget()
-                                            }
-                                        },
-                                        0,
-                                        250)
-
+            curIndex++
+            runArtwork()
         }
+
+
+        findViewById<Button>(R.id.prevButton).setOnClickListener {
+
+            // runSequence()
+            curIndex--
+
+            runArtwork()
+        }
+
+
+    }
+
+    fun runArtwork ()
+    {
+        curIndex = Math.floorMod(curIndex, files.count())
+        val file = files[curIndex]
+        try
+        {
+            // MINE
+            val parser = SvgToArtwork()
+            val istream = assets.open("svgs/$file")
+            Log.d(MainActivity::class.simpleName, "i: $curIndex : $file")
+            val artwork = parser.parse(istream)
+            artwork.title = file
+            drawView.redraw(artwork)
+            istream.close()
+            titleTextView.text = artwork.title
+
+            val istream2 = assets.open("svgs/$file")
+            Sharp.loadInputStream(istream2).into(svgImageView)
+            istream2.close()
+
+
+
+        } catch (e: IOException)
+        {
+            e.printStackTrace()
+        }
+    }
+
+    fun runSequence ()
+    {
+        Timer().scheduleAtFixedRate(object : TimerTask()
+                                    {
+                                        override fun run()
+                                        {
+                                            timerHandler.obtainMessage(1)
+                                                    .sendToTarget()
+                                        }
+                                    },
+                                    0,
+                                    250)
     }
 
 }

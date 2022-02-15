@@ -23,6 +23,8 @@ class Polygon ()
     var fillType: Path.FillType = Path.FillType.EVEN_ODD
     // Clip rule is not currently supported in this parser
     var clipRule: Path.FillType = Path.FillType.EVEN_ODD
+    var dashArray: Float? = null
+    var strokeLineJoin : Paint.Join = Paint.Join.MITER
 
 
 
