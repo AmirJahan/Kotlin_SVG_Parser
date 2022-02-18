@@ -1,7 +1,6 @@
 package com.oddinstitute.svgparser
 
 import android.graphics.PointF
-import com.oddinstitute.svgparser.svg_tags.path_tag.PathTag
 import kotlin.math.*
 
 fun SevenPieceArc.toSegmentsObjCMethod(curPoint: PointF): ArrayList<Segment>

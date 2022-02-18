@@ -16,17 +16,6 @@ class DrawView(context: Context) : View(context)
    var paint: Paint = Paint()
 
 
-    lateinit var tempPath : Path
-
-    init
-    {
-        paint = Paint()
-        paint.isAntiAlias = true
-
-
-        tempPath = Path()
-    }
-
     fun redraw (art: Artwork)
     {
         this.artwork = art
@@ -36,6 +25,8 @@ class DrawView(context: Context) : View(context)
             poly.makePath()
         }
 
+
+        // FIXME -> Is this needed. Maybe it causes a double rendering
         this.invalidate()
     }
 

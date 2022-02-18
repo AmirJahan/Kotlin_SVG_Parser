@@ -10,8 +10,8 @@ import android.util.Log
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.TextView
-import com.oddinstitute.svgparser.svg_to_artwork.SvgToArtwork
-import com.oddinstitute.svgparser.svg_to_artwork.parse
+import com.oddinstitute.svgparser.svg_parser.SvgParser
+import com.oddinstitute.svgparser.svg_parser.parse
 import com.oddinstitute.svgparser.temp_draw.DrawView
 import java.io.IOException
 import java.util.*
@@ -47,6 +47,7 @@ class MainActivity : AppCompatActivity()
     {
         override fun handleMessage(msg: Message)
         {
+            curIndex ++
             curIndex %= files.count()
 
             runArtwork ()
@@ -82,7 +83,7 @@ class MainActivity : AppCompatActivity()
         try
         {
             // MY SVG
-            val parser = SvgToArtwork()
+            val parser = SvgParser()
             val istream = assets.open("mysvg.svg")
 
             val artwork = parser.parse(istream)
@@ -102,11 +103,6 @@ class MainActivity : AppCompatActivity()
                                      istream2.close()
 
                                  }, 500)
-
-
-
-
-
         } catch (e: IOException)
         {
             e.printStackTrace()
@@ -119,7 +115,7 @@ class MainActivity : AppCompatActivity()
 
         findViewById<Button>(R.id.newArtworkButton).setOnClickListener {
 
-            // runSequence()
+//             runSequence()
 
             curIndex++
             runArtwork()
@@ -144,7 +140,7 @@ class MainActivity : AppCompatActivity()
         try
         {
             // MINE
-            val parser = SvgToArtwork()
+            val parser = SvgParser()
             val istream = assets.open("svgs/$file")
             Log.d(MainActivity::class.simpleName, "i: $curIndex : $file")
             val artwork = parser.parse(istream)
@@ -187,6 +183,7 @@ fun MainActivity.getSvgsFromAssets(path: String,
                                    context: Context): ArrayList<String>
 {
     val listOfSVGs = ArrayList<String>()
+
 
     context.assets.list(path)
             ?.forEach { file ->

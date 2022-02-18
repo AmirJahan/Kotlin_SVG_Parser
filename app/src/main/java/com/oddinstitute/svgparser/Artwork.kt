@@ -20,13 +20,6 @@ class Artwork ()
 {
     // TODO this is new
     var title: String = ""
-
-
-
-
-
-
-    var polygons: ArrayList<Polygon> = arrayListOf()
     var id: String = UUID.randomUUID().toString()
     var tags: ArrayList<String> = arrayListOf()
 
@@ -41,6 +34,13 @@ class Artwork ()
 
 
     // var motionBundles: ArrayList<MotionBundle> = arrayListOf()
+
+
+    var polygons: ArrayList<Polygon> = arrayListOf()
+
+
+
+
 
     init {
         // this is for when we read from the disk. From SVG, this is done at the construct

@@ -1,8 +1,6 @@
 package com.oddinstitute.svgparser
 
-import android.graphics.Matrix
-import android.graphics.PointF
-import com.oddinstitute.svgparser.svg_tags.path_tag.PathTag
+import com.oddinstitute.svgparser.tags.path_tag.PathTag
 import kotlin.math.*
 
 // rx ry x-axis-rotation large-arc-flag sweep-flag x y
