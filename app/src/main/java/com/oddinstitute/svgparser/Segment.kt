@@ -4,21 +4,16 @@ import android.graphics.PointF
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
-
 @Serializable
-class Segment()
-{
+class Segment() {
     lateinit var type: PathType
 
-    constructor(type: PathType): this ()
-    {
+    constructor(type: PathType): this() {
         this.type = type
     }
 
-
     // we changed this, made the c1 and c2 with defaults of null
-    constructor(t: PathType, k: PointF, c1: PointF? = null, c2: PointF? = null) : this (t)
-    {
+    constructor(t: PathType, k: PointF, c1: PointF? = null, c2: PointF? = null) : this(t) {
         type = t
         knot = k
         cp1 = c1
@@ -48,8 +43,6 @@ class Segment()
 
     @Serializable(with = PointFAsStringSerializer::class)
     var cp2: PointF? = null
-
-
 
     @Transient
     var knotPath: CornerPath? = null

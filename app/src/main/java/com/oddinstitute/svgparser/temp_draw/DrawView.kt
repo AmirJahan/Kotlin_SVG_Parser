@@ -1,6 +1,5 @@
 package com.oddinstitute.svgparser.temp_draw
 
-
 import android.content.Context
 import android.graphics.*
 import android.view.View
@@ -9,32 +8,24 @@ import com.oddinstitute.svgparser.Artwork
 import com.oddinstitute.svgparser.PathType
 import com.oddinstitute.svgparser.polygon.Polygon
 
-class DrawView(context: Context) : View(context)
-{
+class DrawView(context: Context) : View(context) {
     var artwork: Artwork? = null
 
-   var paint: Paint = Paint()
+    var paint: Paint = Paint()
 
-
-    fun redraw (art: Artwork)
-    {
+    fun redraw(art: Artwork) {
         this.artwork = art
 
         this.artwork?.let {
             for (poly in it.polygons)
-            poly.makePath()
+                poly.makePath()
         }
-
 
         // FIXME -> Is this needed. Maybe it causes a double rendering
         this.invalidate()
     }
 
-
-
-
-    override fun onDraw(canvas: Canvas)
-    {
+    override fun onDraw(canvas: Canvas) {
 //        tempPath.moveTo(150f,0f)
 //        tempPath.lineTo(121f, 90f)
 //        tempPath.lineTo(198f, 35f)
@@ -51,42 +42,32 @@ class DrawView(context: Context) : View(context)
 //
 //        canvas.drawPath(tempPath, paint)
 
-
         artwork?.let {
             drawArtwork(canvas, it)
         }
     }
 }
 
-fun DrawView.drawArtwork(canvas: Canvas, artwork: Artwork)
-{
+fun DrawView.drawArtwork(canvas: Canvas, artwork: Artwork) {
     // drawing all paths
-    for (polygon in artwork.polygons)
-    {
+    for (polygon in artwork.polygons) {
         // fill
-        if (polygon.shapeNode.fillColor != Color.TRANSPARENT.toColor())
-        {
-
+        if (polygon.shapeNode.fillColor != Color.TRANSPARENT.toColor()) {
             styleFillPaint(polygon)
             canvas.drawPath(polygon.mainPath,
                             paint)
         }
 
-        if (polygon.shapeNode.strokeWidth > 0f)
-        {
+        if (polygon.shapeNode.strokeWidth > 0f) {
             styleStrokePaint(polygon)
             canvas.drawPath(polygon.mainPath,
                             paint)
         }
     }
-
 }
 
-fun DrawView.styleFillPaint(polygon: Polygon)
-{
+fun DrawView.styleFillPaint(polygon: Polygon) {
     paint.style = Paint.Style.FILL
-
-
 
     polygon.shapeNode.filColorApplied.let {
         paint.color = it.toArgb()
@@ -101,10 +82,8 @@ fun DrawView.styleFillPaint(polygon: Polygon)
     paint.clearShadowLayer()
 }
 
-
 // todo important
-fun DrawView.styleStrokePaint(polygon: Polygon)
-{
+fun DrawView.styleStrokePaint(polygon: Polygon) {
     polygon.shapeNode.strokeWidth.let { width ->
         paint.style = Paint.Style.STROKE
         paint.strokeWidth = width
@@ -116,28 +95,19 @@ fun DrawView.styleStrokePaint(polygon: Polygon)
         paint.pathEffect = null
         paint.clearShadowLayer()
 
-
         polygon.dashArray?.let {
             paint.pathEffect = DashPathEffect(floatArrayOf(it, it), 0f)
-
         }
 
-            paint.strokeJoin = polygon.strokeLineJoin
-
+        paint.strokeJoin = polygon.strokeLineJoin
     }
 }
-
-
-
-
-
 
 // TODO
 // THIS IS TEMPORARY.
 // IT'S DIFFERENT THAN THE ACTUAL THING IN MOUSH
 // TODO IMPORTANT -> this.mainPath.fillType should go to moush
-fun Polygon.makePath()
-{
+fun Polygon.makePath() {
     // before thishappens, there is always
     // transform
     // and apply boum
@@ -148,21 +118,15 @@ fun Polygon.makePath()
     // todo
     this.mainPath.fillType = this.fillType
 
-    for (piece in this.shapeNode.pathValue.segments)
-    {
-
-        when (piece.type)
-        {
-            PathType.Move ->
-            {
+    for (piece in this.shapeNode.pathValue.segments) {
+        when (piece.type) {
+            PathType.Move -> {
                 mainPath.moveToPoint(piece.knot)
             }
-            PathType.Line, PathType.Horizontal, PathType.Vertical ->
-            {
+            PathType.Line, PathType.Horizontal, PathType.Vertical -> {
                 mainPath.lineToPoint(piece.knot)
             }
-            PathType.Curve, PathType.SmoothCurve ->
-            {
+            PathType.Curve, PathType.SmoothCurve -> {
                 piece.cp1?.let { cp1Drawn ->
                     piece.cp2?.let { cp2Drawn ->
                         mainPath.cubicToCpCpPoint(cp1Drawn,
@@ -171,8 +135,7 @@ fun Polygon.makePath()
                     }
                 }
             }
-            PathType.Quad, PathType.SmoothQuad ->
-            {
+            PathType.Quad, PathType.SmoothQuad -> {
                 piece.cp1?.let { cp1Drawn ->
                     mainPath.quadToCpPoint(cp1Drawn,
                                            piece.knot)

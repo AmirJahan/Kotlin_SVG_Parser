@@ -6,28 +6,22 @@ import org.xmlpull.v1.XmlPullParser
 
 // this is the only tag that is not a sub class of Tag
 // because it doesn't really need that
-class SvgTag(val parser: XmlPullParser)
-{
-    fun decode(): Pair<PointF, Float>
-    {
+class SvgTag(val parser: XmlPullParser) {
+    fun decode(): Pair<PointF, Float> {
         var viewBoxString = ""
         parser.getAttributeValue(null, "viewBox")?.let {
-
             viewBoxString = it
         }
-
 
         // general SVG cleaner
         val viewBoxCleaned = viewBoxString.cleanTags()
 
-
         // SVG ViewBox can have either space or commas
         val pieces =
             viewBoxCleaned.replace(" ", ",")
-                    .replace(",,", ",") // it's possible to get two commas
-                    .split(",")
-                    .toTypedArray()
-
+                .replace(",,", ",") // it's possible to get two commas
+                .split(",")
+                .toTypedArray()
 
         val width = pieces[2].toFloat() - pieces[0].toFloat()
         val height = pieces[3].toFloat() - pieces[1].toFloat()
@@ -44,4 +38,3 @@ class SvgTag(val parser: XmlPullParser)
         return Pair(offset, scaleFactor)
     }
 }
-

@@ -7,12 +7,7 @@ import com.oddinstitute.svgparser.Segment
 import com.oddinstitute.svgparser.SevenPieceArc
 import kotlin.math.*
 
-
-
-
-
-fun SevenPieceArc.toSegmentsJavaMethod(curPoint: PointF): ArrayList<Segment>
-{
+fun SevenPieceArc.toSegmentsJavaMethod(curPoint: PointF): ArrayList<Segment> {
     val segmentsArr: ArrayList<Segment> = arrayListOf()
 
     val x0 = curPoint.x
@@ -28,9 +23,7 @@ fun SevenPieceArc.toSegmentsJavaMethod(curPoint: PointF): ArrayList<Segment>
     val largeArcFlag = this.largeArcFlag
     val sweepFlag = this.sweepFlag
 
-
-    if (x0 == x && y0 == y)
-    {
+    if (x0 == x && y0 == y) {
         // If the endpoints (x, y) and (x0, y0) are identical, then this
         // is equivalent to omitting the elliptical arc segment entirely.
         // (behaviour specified by the spec)
@@ -38,8 +31,7 @@ fun SevenPieceArc.toSegmentsJavaMethod(curPoint: PointF): ArrayList<Segment>
     }
 
     // Handle degenerate case (behaviour specified by the spec)
-    if (rx == 0f || ry == 0f)
-    {
+    if (rx == 0f || ry == 0f) {
         val lineSeg = Segment(PathType.Line, PointF(x, y))
 
         segmentsArr.add(lineSeg)
@@ -77,8 +69,7 @@ fun SevenPieceArc.toSegmentsJavaMethod(curPoint: PointF): ArrayList<Segment>
     // If they are not, the spec says to scale them up so they are.
     // This is to compensate for potential rounding errors/differences between SVG implementations.
     val radiiCheck = x1Sqr / rxSqr + y1Sqr / rySqr
-    if (radiiCheck > 0.99999)
-    {
+    if (radiiCheck > 0.99999) {
         val radiiScale = sqrt(radiiCheck) * 1.00001
         rx = (radiiScale * rx).toFloat()
         ry = (radiiScale * ry).toFloat()
@@ -124,28 +115,22 @@ fun SevenPieceArc.toSegmentsJavaMethod(curPoint: PointF): ArrayList<Segment>
     p = ux * vx + uy * vy
     sign = if (ux * vy - uy * vx < 0) -1.0 else 1.0
 
-
-// Check input to Math.acos() in case rounding or other errors result in a val < -1 or > +1.
-// For example, see the possible KitKat JIT error described in issue #62.
+    // Check input to Math.acos() in case rounding or other errors result in a val < -1 or > +1.
+    // For example, see the possible KitKat JIT error described in issue #62.
     val arcCos: Double = if (p / n < -1.0) Math.PI else if (p / n > 1.0) 0.0 else acos(p / n)
-
 
     var angleExtent: Double = sign * arcCos
 
     // Catch angleExtents of 0, which will cause problems later in arcToBeziers
-    if (angleExtent == 0.0)
-    {
+    if (angleExtent == 0.0) {
         val lineSeg = Segment(PathType.Line, PointF(x, y))
 
         segmentsArr.add(lineSeg)
         return segmentsArr
     }
-    if (!sweepFlag && angleExtent > 0)
-    {
+    if (!sweepFlag && angleExtent > 0) {
         angleExtent -= TWO_PI
-    }
-    else if (sweepFlag && angleExtent < 0)
-    {
+    } else if (sweepFlag && angleExtent < 0) {
         angleExtent += TWO_PI
     }
     angleExtent %= TWO_PI
@@ -173,8 +158,7 @@ fun SevenPieceArc.toSegmentsJavaMethod(curPoint: PointF): ArrayList<Segment>
 
     // Final step is to add the bezier curves to the path
     var i = 0
-    while (i < bezierPoints.size)
-    {
+    while (i < bezierPoints.size) {
         // we are here
 
         val cp1 = PointF(bezierPoints[i], bezierPoints[i + 1])
@@ -188,10 +172,7 @@ fun SevenPieceArc.toSegmentsJavaMethod(curPoint: PointF): ArrayList<Segment>
     return segmentsArr
 }
 
-
-
-fun SevenPieceArc.arcToBeziers(angleStart: Double, angleExtent: Double): FloatArray
-{
+fun SevenPieceArc.arcToBeziers(angleStart: Double, angleExtent: Double): FloatArray {
     val numPieces = ceil(abs(angleExtent) / (Math.PI * 2.0)).toInt() // (angleExtent / 90deg)
     val angleIncrement = angleExtent / numPieces
 
@@ -200,10 +181,8 @@ fun SevenPieceArc.arcToBeziers(angleStart: Double, angleExtent: Double): FloatAr
 
     val coords = FloatArray(numPieces * 6)
 
-
     var pos = 0
-    for (i in 0 until numPieces)
-    {
+    for (i in 0 until numPieces) {
         var angle = angleStart + i * angleIncrement
 
         // Calculate the control vector at this angle

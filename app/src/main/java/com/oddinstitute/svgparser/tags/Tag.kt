@@ -8,8 +8,7 @@ import org.xmlpull.v1.XmlPullParser
 
 // base tag class for everyone
 // it cacluates ALL the common tags
-open class Tag()
-{
+open class Tag() {
     open var id: String? = null
 
     open var fill: Color? = null
@@ -32,21 +31,7 @@ open class Tag()
     // this is generic, but only used in the actual tags
     // var parentGroup: GTag? = null
 
-
-
-
-
-
-
-
-
-
-
-    constructor(parser: XmlPullParser) : this()
-    {
-
-
-
+    constructor(parser: XmlPullParser) : this() {
         parser.getAttributeValue(null, "fill")?.let {
             if (it != "none")
                 this.fill = SvgColor.ofRaw(it)
@@ -54,12 +39,11 @@ open class Tag()
 
         parser.getAttributeValue(null, "id")?.let {
             this.id = it.replace("#", "").trim().trimStart().trimEnd()
-                    .replace(" ", "") // remove hashtags on the fly
+                .replace(" ", "") // remove hashtags on the fly
         }
 
         parser.getAttributeValue(null, "stroke")?.let {
-            if (it != "none")
-            {
+            if (it != "none") {
                 this.stroke = SvgColor.ofRaw(it)
                 this.strokeWidth = 1.0f // if there's a stroke color, then there's a stroke
                 // in the next code, this might be updated with the actual stroke width
@@ -104,7 +88,6 @@ open class Tag()
         }
     }
 
-
     // this function simply reads the right values
     // replaced with init
 //    open fun decodeThis ()
@@ -112,16 +95,13 @@ open class Tag()
 //
 //    }
 
-
     // this function returns an array, because for the paths, we might have more than one piece
     // others return singular objects, but path might return multiple objects
-    open fun toPolygon(): ArrayList<Polygon>
-    {
+    open fun toPolygon(): ArrayList<Polygon> {
         return arrayListOf()
     }
 
-    open fun toText(): ArrayList<Polygon>
-    {
+    open fun toText(): ArrayList<Polygon> {
         return arrayListOf()
     }
 }

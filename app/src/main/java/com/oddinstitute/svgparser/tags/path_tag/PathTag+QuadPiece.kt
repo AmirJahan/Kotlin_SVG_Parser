@@ -4,19 +4,17 @@ import android.graphics.PointF
 import com.oddinstitute.svgparser.PathType
 import com.oddinstitute.svgparser.Segment
 
-
-fun PathTag.quadPiece(piece: String, curPoint: PointF): ArrayList<Segment>
-{
+fun PathTag.quadPiece(piece: String, curPoint: PointF): ArrayList<Segment> {
     val segments = arrayListOf<Segment>()
     val str = piece
-            .replace("q", "")
-            .replace("Q", "")
-            .replace(" ", ",")
-            .replace(",,", ",") // it's possible to get two commas
+        .replace("q", "")
+        .replace("Q", "")
+        .replace(" ", ",")
+        .replace(",,", ",") // it's possible to get two commas
 
     // quads have 4 pieces, SO
     val points = str
-            .split(",")
+        .split(",")
 
     // if we are relative, we find the actual value based on the cur point
     // this is simply a shortcut, when relative, we use curPoint, when not, we don't
@@ -30,16 +28,13 @@ fun PathTag.quadPiece(piece: String, curPoint: PointF): ArrayList<Segment>
 //        PointF(points[2].toFloat() + intCurPoint.x,
 //               points[3].toFloat() + intCurPoint.y)
 
-
-    for (i in 0 until points.count() step 4)
-    {
+    for (i in 0 until points.count() step 4) {
         val quad = Segment(PathType.Quad)
 
         // if we are relative, we find the actual value based on the cur point
         // this is simply a shortcut, when relative, we use curPoint, when not, we don't
         // if not, we just add zero
-        if (piece[0] == 'q') // all relative
-        {
+        if (piece[0] == 'q') { // all relative
             intCurPoint = curPoint
 
             // after the first piece, we should take the previous location
@@ -54,10 +49,8 @@ fun PathTag.quadPiece(piece: String, curPoint: PointF): ArrayList<Segment>
             PointF(points[i+2].toFloat() + intCurPoint.x,
                    points[i+3].toFloat() + intCurPoint.y)
 
-
         segments.add(quad)
     }
-
 
     return segments
 }

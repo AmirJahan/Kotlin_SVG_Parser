@@ -5,12 +5,9 @@ import com.oddinstitute.svgparser.PathValue
 import com.oddinstitute.svgparser.polygon.Polygon
 import com.oddinstitute.svgparser.clone
 
-
-fun PathTag.dataToPolygon(singlePathPieceString: String): Polygon
-{
+fun PathTag.dataToPolygon(singlePathPieceString: String): Polygon {
     val delimiters: Array<Char> =
         arrayOf('M', 'm', 'L', 'l', 'C', 'c', 'S', 's', 'Q', 'q', 'T', 't', 'H', 'h', 'V', 'v', 'a', 'A')
-
 
     val thisPathPolygon = Polygon()
 
@@ -21,25 +18,22 @@ fun PathTag.dataToPolygon(singlePathPieceString: String): Polygon
     // not sure why
     thisPathPolygon.closed = false
 
-    if (workingString.contains("Z"))
-    {
+    if (workingString.contains("Z")) {
         thisPathPolygon.closed = true
         workingString = workingString.replace("Z", "")
     }
 
     val piecesStringArr = arrayListOf(workingString)
 
-    for (del in delimiters)
-    {
+    for (del in delimiters) {
         val temp = ArrayList<String>()
         temp.addAll(piecesStringArr.filterNotNull())
         piecesStringArr.clear()
 
-        for (any in temp)
-        {
+        for (any in temp) {
             val thesePieces =
                 any.split("(?=$del)".toRegex())
-                        .toTypedArray()
+                    .toTypedArray()
 
             for (each in thesePieces)
                 if (each.isNotEmpty())
@@ -47,16 +41,13 @@ fun PathTag.dataToPolygon(singlePathPieceString: String): Polygon
         }
     }
 
-
     val pathValue = PathValue()
     var tempCurPoint = PointF() // is the previous location
 
-    for (piece: String in piecesStringArr)
-    {
-        when (piece[0])
-        {
+    for (piece: String in piecesStringArr) {
+        when (piece[0]) {
             'M', 'm' -> pathValue.segments.add(movePiece(piece, tempCurPoint))
-            'L', 'l', 'v', 'V', 'h', 'H' -> pathValue.segments.addAll(linePiece(piece, tempCurPoint) )// not relative
+            'L', 'l', 'v', 'V', 'h', 'H' -> pathValue.segments.addAll(linePiece(piece, tempCurPoint)) // not relative
             'C', 'c' -> pathValue.segments.addAll(curvePiece(piece, tempCurPoint))
             'S', 's' -> pathValue.segments.addAll(smoothCurvePiece(piece, tempCurPoint, pathValue.segments.last()))
             'Q', 'q' -> pathValue.segments.addAll(quadPiece(piece, tempCurPoint))
@@ -76,10 +67,3 @@ fun PathTag.dataToPolygon(singlePathPieceString: String): Polygon
 
     return thisPathPolygon
 }
-
-
-
-
-
-
-

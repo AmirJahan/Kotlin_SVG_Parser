@@ -1,8 +1,7 @@
 package com.oddinstitute.svgparser.svg_elements
 
 // here, we read inner and outer styles. Inner gets priority
-fun SvgStyle.combineWithOuterStyle(outerStyle: SvgStyle): SvgStyle
-{
+fun SvgStyle.combineWithOuterStyle(outerStyle: SvgStyle): SvgStyle {
     val resStyle: SvgStyle = SvgStyle()
 
     // we call all of these on order

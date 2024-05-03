@@ -2,15 +2,13 @@ package com.oddinstitute.svgparser
 
 import kotlinx.serialization.Serializable
 
-
 // this class determines the type of a path
 
 @Serializable
-enum class PathType(val c: Char)
-{
+enum class PathType(val c: Char) {
     Move('M'),
-    Horizontal ('H'),
-    Vertical ('V'),
+    Horizontal('H'),
+    Vertical('V'),
     Line('L'),
 
     Curve('C'),
@@ -19,14 +17,11 @@ enum class PathType(val c: Char)
     Quad('Q'),
     SmoothQuad('T'), // cp 1 is reflection
 
-
     Arc('A'), // cp 1 is reflection
 }
 
-fun String.pathTypeFromString () : PathType
-{
-    when (this)
-    {
+fun String.pathTypeFromString(): PathType {
+    when (this) {
         "Move" -> return PathType.Move
         "Horizontal" -> return PathType.Horizontal
         "Vertical" -> return PathType.Vertical

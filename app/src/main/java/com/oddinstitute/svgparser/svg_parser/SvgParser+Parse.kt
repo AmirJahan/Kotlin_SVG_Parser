@@ -10,31 +10,24 @@ import org.xmlpull.v1.XmlPullParserFactory
 import java.io.IOException
 import java.io.InputStream
 
-fun SvgParser.parse(inputStream: InputStream): Artwork
-{
+fun SvgParser.parse(inputStream: InputStream): Artwork {
     val artwork: Artwork = Artwork()
-    try
-    {
+    try {
         val factory = XmlPullParserFactory.newInstance()
         factory.isNamespaceAware = true
         val parser: XmlPullParser = factory.newPullParser()
         parser.setInput(inputStream, null)
         var eventType = parser.eventType
-        while (eventType != XmlPullParser.END_DOCUMENT)
-        {
+        while (eventType != XmlPullParser.END_DOCUMENT) {
             parser.name?.let {
                 curTagName = parser.name
 //                    Log.d(XmlToArtwork::class.simpleName, "curTagName: ${curTagName!!}")
             }
 
-            when (eventType)
-            {
-                XmlPullParser.START_TAG ->
-                {
-                    when (curTagName)
-                    {
-                        "g" ->
-                        {
+            when (eventType) {
+                XmlPullParser.START_TAG -> {
+                    when (curTagName) {
+                        "g" -> {
                             // we set the active group
                             // here, we make a tag with parser
                             // and put it in the active group
@@ -47,86 +40,71 @@ fun SvgParser.parse(inputStream: InputStream): Artwork
                             scaleFactor = decodedViewBox.second
                             viewBoxOffset = decodedViewBox.first
                         } // must be in start, because its end is the end of the document
-                        "line" ->
-                        {
+                        "line" -> {
                             val lineTag = LineTag(parser)
 
                             if (definitionState)
                                 definitions.add(lineTag)
-                            else
-                            {
+                            else {
                                 val polygons = lineTag.toPolygons(currentGroups, styles, scaleFactor, viewBoxOffset)
                                 artwork.polygons.addAll(polygons)
                             }
                         }
-                        "rect" ->
-                        {
+                        "rect" -> {
                             val rectTag = RectTag(parser)
                             if (definitionState)
                                 definitions.add(rectTag)
-                            else
-                            {
+                            else {
                                 val polygons = rectTag.toPolygons(currentGroups, styles, scaleFactor, viewBoxOffset)
                                 artwork.polygons.addAll(polygons)
                             }
                         }
-                        "polygon" ->
-                        {
+                        "polygon" -> {
                             val polygonTag = PolyTag(parser, true)
                             if (definitionState)
                                 definitions.add(polygonTag)
-                            else
-                            {
+                            else {
                                 val polygons = polygonTag.toPolygons(currentGroups, styles, scaleFactor, viewBoxOffset)
                                 artwork.polygons.addAll(polygons)
                             }
                         }
-                        "polyline" ->
-                        {
+                        "polyline" -> {
                             val polylineTag = PolyTag(parser) // default closed is false
                             if (definitionState)
                                 definitions.add(polylineTag)
-                            else
-                            {
+                            else {
                                 val polygons = polylineTag.toPolygons(currentGroups, styles, scaleFactor, viewBoxOffset)
                                 artwork.polygons.addAll(polygons)
                             }
                         }
-                        "circle" ->
-                        {
+                        "circle" -> {
                             val circleTag = CircleTag(parser)
                             if (definitionState)
                                 definitions.add(circleTag)
-                            else
-                            {
+                            else {
                                 val polygons = circleTag.toPolygons(currentGroups, styles, scaleFactor, viewBoxOffset)
                                 artwork.polygons.addAll(polygons)
                             }
                         }
-                        "ellipse" ->
-                        {
+                        "ellipse" -> {
                             val ellipseTag = OvalTag(parser)
                             if (definitionState)
                                 definitions.add(ellipseTag)
-                            else
-                            {
+                            else {
                                 val polygons = ellipseTag.toPolygons(currentGroups, styles, scaleFactor, viewBoxOffset)
                                 artwork.polygons.addAll(polygons)
                             }
                         }
-                        "path" ->
-                        { // this is different. Doesn't use decode, uues a different type
+                        "path" -> { // this is different. Doesn't use decode, uues a different type
                             val pathTag = PathTag(parser)
                             if (definitionState)
                                 definitions.add(pathTag)
-                            else
-                            {
+                            else {
                                 val polygons = pathTag.toPolygons(currentGroups, styles, scaleFactor, viewBoxOffset)
                                 artwork.polygons.addAll(polygons)
                             }
                         }
-                        "use" ->
-                        {
+                        "use" -> {
                             // here, we pass the definitions into the ue tag
                             val useTag = UseTag(parser, definitions)
                             val resultTag = useTag.resultTag()
@@ -140,16 +118,13 @@ fun SvgParser.parse(inputStream: InputStream): Artwork
                     }
                 }
                 XmlPullParser.TEXT -> curTagText = parser.text // if there is text, read it
-                XmlPullParser.END_TAG ->
-                {
+                XmlPullParser.END_TAG -> {
 
                     Log.d(SvgParser::class.simpleName, "At end: $curTagName")
 
-                    when (curTagName)
-                    {
-                        "style" ->
-                        {
-                            val styleTag = StyleTag (curTagText)
+                    when (curTagName) {
+                        "style" -> {
+                            val styleTag = StyleTag(curTagText)
                             this.styles = styleTag.decodeStyle()
                         }
 
@@ -166,11 +141,9 @@ fun SvgParser.parse(inputStream: InputStream): Artwork
             eventType = parser.next()
         }
 
-    } catch (e: XmlPullParserException)
-    {
+    } catch (e: XmlPullParserException) {
         e.printStackTrace()
-    } catch (e: IOException)
-    {
+    } catch (e: IOException) {
         e.printStackTrace()
     }
 
@@ -184,4 +157,3 @@ fun SvgParser.parse(inputStream: InputStream): Artwork
 
     return artwork
 }
-

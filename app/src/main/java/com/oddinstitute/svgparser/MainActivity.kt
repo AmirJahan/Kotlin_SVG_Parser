@@ -19,22 +19,17 @@ import kotlin.collections.ArrayList
 import android.widget.ImageView
 import com.pixplicity.sharp.Sharp
 
-
 //todo: once the viewbox scale happened, make everything two point decimals
 //maybe do this for everything
-
 
 // todo
 //draw a path manually woth the cube example on the pather
 //// to understand the evenodd
 
-
 // todo
 // fit object to a 512
 
-
-class MainActivity : AppCompatActivity()
-{
+class MainActivity : AppCompatActivity() {
     var curIndex = 0 // we checked up to 850, recheck from there
     lateinit var files: ArrayList<String>
 
@@ -43,45 +38,33 @@ class MainActivity : AppCompatActivity()
 
     lateinit var svgImageView: ImageView
 
-    var timerHandler: Handler = object : Handler(Looper.getMainLooper())
-    {
-        override fun handleMessage(msg: Message)
-        {
-            curIndex ++
+    var timerHandler: Handler = object : Handler(Looper.getMainLooper()) {
+        override fun handleMessage(msg: Message) {
+            curIndex++
             curIndex %= files.count()
 
-            runArtwork ()
+            runArtwork()
         }
     }
 
-
-    override fun onCreate(savedInstanceState: Bundle?)
-    {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         // TODO
         // polylines and paths are closed unless their fill value is "none"
 
-
         files = getSvgsFromAssets("svgs", this)
 
         drawView = DrawView(this)
         findViewById<FrameLayout>(R.id.canvasId).addView(drawView)
 
-
-
-
-
-
         titleTextView = findViewById<TextView>(R.id.artworkTitleTextView)
 
         svgImageView = findViewById(R.id.svgImageViewId)
 
-
         // single file trial
-        try
-        {
+        try {
             // MY SVG
             val parser = SvgParser()
             val istream = assets.open("mysvg.svg")
@@ -92,53 +75,35 @@ class MainActivity : AppCompatActivity()
             titleTextView.text = artwork.title
             istream.close()
 
-
             // READER SVG
-            Handler(Looper
-                            .getMainLooper())
-                    .postDelayed({
-                                     val istream2 = assets.open("mysvg.svg")
-                                     Sharp.loadInputStream(istream2)
-                                             .into(svgImageView)
-                                     istream2.close()
-
-                                 }, 500)
-        } catch (e: IOException)
-        {
+            Handler(Looper.getMainLooper())
+                .postDelayed({
+                    val istream2 = assets.open("mysvg.svg")
+                    Sharp.loadInputStream(istream2)
+                        .into(svgImageView)
+                    istream2.close()
+                }, 500)
+        } catch (e: IOException) {
             e.printStackTrace()
         }
 
-
-
-
-
-
         findViewById<Button>(R.id.newArtworkButton).setOnClickListener {
-
-//             runSequence()
-
+            // runSequence()
             curIndex++
             runArtwork()
         }
 
-
         findViewById<Button>(R.id.prevButton).setOnClickListener {
-
             // runSequence()
             curIndex--
-
             runArtwork()
         }
-
-
     }
 
-    fun runArtwork ()
-    {
+    fun runArtwork() {
         curIndex = Math.floorMod(curIndex, files.count())
         val file = files[curIndex]
-        try
-        {
+        try {
             // MINE
             val parser = SvgParser()
             val istream = assets.open("svgs/$file")
@@ -152,43 +117,31 @@ class MainActivity : AppCompatActivity()
             val istream2 = assets.open("svgs/$file")
             Sharp.loadInputStream(istream2).into(svgImageView)
             istream2.close()
-
-
-
-        } catch (e: IOException)
-        {
+        } catch (e: IOException) {
             e.printStackTrace()
         }
     }
 
-    fun runSequence ()
-    {
-        Timer().scheduleAtFixedRate(object : TimerTask()
-                                    {
-                                        override fun run()
-                                        {
-                                            timerHandler.obtainMessage(1)
-                                                    .sendToTarget()
-                                        }
-                                    },
-                                    0,
-                                    250)
+    fun runSequence() {
+        Timer().scheduleAtFixedRate(object : TimerTask() {
+            override fun run() {
+                timerHandler.obtainMessage(1)
+                    .sendToTarget()
+            }
+        },
+        0,
+        250)
     }
-
 }
 
-
 // do NOT delete this
-fun MainActivity.getSvgsFromAssets(path: String,
-                                   context: Context): ArrayList<String>
-{
+fun MainActivity.getSvgsFromAssets(path: String, context: Context): ArrayList<String> {
     val listOfSVGs = ArrayList<String>()
 
-
     context.assets.list(path)
-            ?.forEach { file ->
-                listOfSVGs.add("$file")
-            }
+        ?.forEach { file ->
+            listOfSVGs.add("$file")
+        }
 
     return listOfSVGs
 }

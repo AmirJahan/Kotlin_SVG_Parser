@@ -9,19 +9,16 @@ import com.oddinstitute.svgparser.operators.cleanTags
 import org.xmlpull.v1.XmlPullParser
 
 // if it is polygon, it will be closed
-class PolyTag(val parser: XmlPullParser, var closed: Boolean = false) : Tag(parser)
-{
+class PolyTag(val parser: XmlPullParser, var closed: Boolean = false) : Tag(parser) {
     // POLYGON
     var points = ""
 
-    init
-    {
+    init {
         // POLYGON
         parser.getAttributeValue(null, "points")?.let { points = it }
     }
 
-    override fun toPolygon(): ArrayList<Polygon>
-    {
+    override fun toPolygon(): ArrayList<Polygon> {
         // for polygon, we assume the values are always paired
         // like x,y x2,y2 x3,y3 and so on
         // split character is "space"
@@ -40,8 +37,7 @@ class PolyTag(val parser: XmlPullParser, var closed: Boolean = false) : Tag(pars
         val pointsComponents = polygonsCleaned.split(",")
 
         // we go through these every 2
-        for (i in 0 until pointsComponents.count() step 2)
-        {
+        for (i in 0 until pointsComponents.count() step 2) {
             val xValue = pointsComponents[i].toFloat()
             val yValue = pointsComponents[i + 1].toFloat()
 
@@ -50,18 +46,15 @@ class PolyTag(val parser: XmlPullParser, var closed: Boolean = false) : Tag(pars
             if (i == 0) segment.type = PathType.Move // the first point, we move there
             else segment.type = PathType.Line // otherwise, we draw a line
 
-
             segment.knot = PointF(xValue, yValue)
 
             // at the end, add to the segments
             segments.add(segment)
         }
 
-
         // create a polygon where its shape node ha s apath value
         // built upon the recently found segments
         polygon.shapeNode.pathValue = PathValue(segments)
-
 
         return arrayListOf(polygon)
     }

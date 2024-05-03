@@ -5,23 +5,17 @@ import com.oddinstitute.svgparser.operators.cleanTags
 import com.oddinstitute.svgparser.polygon.Polygon
 import org.xmlpull.v1.XmlPullParser
 
-class PathTag(val parser: XmlPullParser) : Tag(parser)
-{
+class PathTag(val parser: XmlPullParser) : Tag(parser) {
     // PATH
     var d = ""
 
-
-    init
-    {
+    init {
         // PATH
         parser.getAttributeValue(null, "d")?.let { d = it }
     }
 
-
-    override fun toPolygon(): ArrayList<Polygon>
-    {
+    override fun toPolygon(): ArrayList<Polygon> {
         val polygons: ArrayList<Polygon> = arrayListOf()
-
 
         // the pathdata might make multiple polygons.
         // however, in order to get the fill type, we should ignore that
@@ -52,15 +46,12 @@ class PathTag(val parser: XmlPullParser) : Tag(parser)
 //            polygons.add(polygon)
 //        }
 
-
-
         // we use this
         val singlePolyString = d.cleanTags()
-                .replace("z", "")
-                .replace("Z", "")
+            .replace("z", "")
+            .replace("Z", "")
         val polygon = dataToPolygon(singlePolyString)
         polygons.add(polygon)
-
 
         return polygons
     }

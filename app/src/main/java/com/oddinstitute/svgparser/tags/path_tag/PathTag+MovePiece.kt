@@ -4,19 +4,15 @@ import android.graphics.PointF
 import com.oddinstitute.svgparser.PathType
 import com.oddinstitute.svgparser.Segment
 
-fun PathTag.movePiece(piece: String, curPoint: PointF): Segment
-{
+fun PathTag.movePiece(piece: String, curPoint: PointF): Segment {
     val str = piece.replace("m", "")
-            .replace("M", "")
-            .replace(" ", ",")
-            .replace(",,", ",") // it's possible to get two commas
-
-
+        .replace("M", "")
+        .replace(" ", ",")
+        .replace(",,", ",") // it's possible to get two commas
 
     val points = str
-            .split(",")
+        .split(",")
     val move = Segment(PathType.Move)
-
 
     // if we are relative, we find the actual value based on the cur point
     // this is simply a shortcut, when relative, we use curPoint, when not, we don't
@@ -29,8 +25,8 @@ fun PathTag.movePiece(piece: String, curPoint: PointF): Segment
     return move
 }
 
-
 // todo these two exist
 operator fun PointF.times(other: Float) = PointF(this.x * other,
                                                  this.y * other)
+
 fun Boolean.toFloat() = if (this) 1f else 0f

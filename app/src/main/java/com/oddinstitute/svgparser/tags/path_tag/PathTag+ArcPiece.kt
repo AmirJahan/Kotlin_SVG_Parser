@@ -7,7 +7,6 @@ import com.oddinstitute.svgparser.operators.toBoolean
 import com.oddinstitute.svgparser.operators.toFloat
 import com.oddinstitute.svgparser.toSegmentsJavaMethod
 
-
 //  x1 y1 x2 y2 fA fS rx ry φ
 /*
 (x1, y1) are the absolute coordinates of the current point on the path,
@@ -34,19 +33,16 @@ fS is the sweep flag, and is 0 if the line joining center to arc sweeps through 
     Δθ which is the difference between these two angles.
  */
 
-
-fun PathTag.arcPieces(piece: String, curPoint: PointF): ArrayList<Segment>
-{
+fun PathTag.arcPieces(piece: String, curPoint: PointF): ArrayList<Segment> {
     val str = piece
-            .replace("a", "")
-            .replace("A", "")
-            .replace(" ", ",")
-            .replace(",,", ",") // it's possible to get two commas
-                                                // at this level, you can't move this to CLEAN
-
+        .replace("a", "")
+        .replace("A", "")
+        .replace(" ", ",")
+        .replace(",,", ",") // it's possible to get two commas
+                            // at this level, you can't move this to CLEAN
 
     val points = str
-            .split(",")
+        .split(",")
 
     // if we are relative, we find the actual value
     // if not, we just add zero
@@ -54,11 +50,8 @@ fun PathTag.arcPieces(piece: String, curPoint: PointF): ArrayList<Segment>
 //    if (piece[0] == 'a') // relative
 //        intCurPoint = curPoint
 
-
-
     if (points.count() != 7)
         return ArrayList<Segment>()
-
 
     val rx = points[0].toFloat()
     val ry = points[1].toFloat()
@@ -66,7 +59,6 @@ fun PathTag.arcPieces(piece: String, curPoint: PointF): ArrayList<Segment>
     val xAxisRotation = points[2].toFloat()
     val largeArcFlag_fA = points[3].toInt().toBoolean()
     val sweepFlag_fS = points[4].toInt().toBoolean()
-
 
     // if we are relative, we find the actual value based on the cur point
     // this is simply a shortcut, when relative, we use curPoint, when not, we don't
@@ -76,14 +68,10 @@ fun PathTag.arcPieces(piece: String, curPoint: PointF): ArrayList<Segment>
     val x2 = points[5].toFloat() + intCurPoint.x
     val y2 = points[6].toFloat() + intCurPoint.y
 
-
     val s = SevenPieceArc(rx, ry, xAxisRotation, largeArcFlag_fA, sweepFlag_fS, x2, y2)
-
 
     val segments: ArrayList<Segment> = s.toSegmentsJavaMethod(curPoint)
 
     return segments
 //    return sevenPieceToSegments(s, intCurPoint)
-
 }
-

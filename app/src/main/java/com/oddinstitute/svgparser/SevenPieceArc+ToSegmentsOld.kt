@@ -3,8 +3,7 @@ package com.oddinstitute.svgparser
 import android.graphics.PointF
 import kotlin.math.*
 
-fun SevenPieceArc.toSegmentsObjCMethod(curPoint: PointF): ArrayList<Segment>
-{
+fun SevenPieceArc.toSegmentsObjCMethod(curPoint: PointF): ArrayList<Segment> {
     val outSegments = ArrayList<Segment>()
 //
 //        if (prevSegment.type == PathType.Arc)
@@ -26,12 +25,10 @@ fun SevenPieceArc.toSegmentsObjCMethod(curPoint: PointF): ArrayList<Segment>
     val largeArcFlag = this.largeArcFlag
     val sweepFlag = this.sweepFlag
 
-
     // Convert angle from degrees to radians
     val TwoPI: Float = (PI * 2.0).toFloat()
     val sinAngle: Float = sin(xAxisRotation * TwoPI / 360)
     val cosAngle: Float = cos(xAxisRotation * TwoPI / 360)
-
 
     val x1Prime: Float = cosAngle * (x0 - x) / 2 + sinAngle * (y0 - y) / 2
     val y1Prime: Float = -sinAngle * (x0 - x) / 2 + cosAngle * (y0 - y) / 2
@@ -43,16 +40,14 @@ fun SevenPieceArc.toSegmentsObjCMethod(curPoint: PointF): ArrayList<Segment>
     rx = abs(rx)
     ry = abs(ry)
 
-
     val lambda: Float = x1Prime.pow(2) / rx.pow(2) + y1Prime.pow(2) / ry.pow(2)
 
-    if (lambda > 1)
-    {
+    if (lambda > 1) {
         rx *= sqrt(lambda)
         ry *= sqrt(lambda)
     }
 
-    // Step 2: Compute (cx′, cy′)
+    // Step 2: Compute (cx', cy')
 
     val rxSq: Float = rx.pow(2)
     val rySq: Float = ry.pow(2)
@@ -66,19 +61,17 @@ fun SevenPieceArc.toSegmentsObjCMethod(curPoint: PointF): ArrayList<Segment>
 
     radicant /= (rxSq * y1PrimeSq) + (rySq * x1PrimeSq)
 
-    // where the + sign is chosen if fA ≠ fS, and the − sign is chosen if fA = fS.
+    // where the + sign is chosen if fA != fS, and the - sign is chosen if fA = fS.
     radicant = sqrt(radicant) * (if (largeArcFlag == sweepFlag) -1; else 1)
 
     val xCenterPrime: Float = radicant * rx / ry * y1Prime
     val yCenterPrime: Float = radicant * -ry / rx * x1Prime
 
-
-    // Step 3: Compute (cx, cy) from (cx′, cy′)
+    // Step 3: Compute (cx, cy) from (cx', cy')
     val centerX: Float = cosAngle * xCenterPrime - sinAngle * yCenterPrime + (x0 + x) / 2
     val centerY: Float = sinAngle * xCenterPrime + cosAngle * yCenterPrime + (y0 + y) / 2
 
-
-    // Step 4: Compute θ1 and Δθ
+    // Step 4: Compute theta1 and Deltatheta
     val vec1_x: Float = (x1Prime - xCenterPrime) / rx
     val vec1_y: Float = (y1Prime - yCenterPrime) / ry
 
@@ -98,9 +91,7 @@ fun SevenPieceArc.toSegmentsObjCMethod(curPoint: PointF): ArrayList<Segment>
 
     ang2 /= segments
 
-
-    for (i in 0 until segments)
-    {
+    for (i in 0 until segments) {
         val a: Float = 4.0f / 3.0f * tan(ang2 / 4.0f);
 
         val x1: Float = cos(ang1)
@@ -131,9 +122,7 @@ fun SevenPieceArc.toSegmentsObjCMethod(curPoint: PointF): ArrayList<Segment>
     return outSegments
 }
 
-
-fun SevenPieceArc.vectorAngle(ux: Float, uy: Float, vx: Float, vy: Float): Float
-{
+fun SevenPieceArc.vectorAngle(ux: Float, uy: Float, vx: Float, vy: Float): Float {
     val sign: Float = if (ux * vy - uy * vx < 0) -1f; else 1f
     val umag: Float = sqrt(ux * ux + uy * uy)
     val vmag: Float = sqrt(ux * ux + uy * uy)
@@ -144,23 +133,22 @@ fun SevenPieceArc.vectorAngle(ux: Float, uy: Float, vx: Float, vy: Float): Float
     if (div > 1)
         div = 1f
 
-
     if (div < -1)
         div = -1f
-
 
     return sign * acos(div)
 }
 
-fun SevenPieceArc.mapToEllipse(x: Float,
-                         y: Float,
-                         rx: Float,
-                         ry: Float,
-                         cosPhi: Float,
-                         sinPhi: Float,
-                         centerX: Float,
-                         centerY: Float): PointF
-{
+fun SevenPieceArc.mapToEllipse(
+    x: Float,
+    y: Float,
+    rx: Float,
+    ry: Float,
+    cosPhi: Float,
+    sinPhi: Float,
+    centerX: Float,
+    centerY: Float
+): PointF {
     val xx = x * rx
     val yy = y * ry
 

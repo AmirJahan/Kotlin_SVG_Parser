@@ -12,10 +12,9 @@ import com.oddinstitute.svgparser.operators.roundTwoDecimals
 
  */
 
-data class RGB (val r: Int, val g: Int, val b: Int)
+data class RGB(val r: Int, val g: Int, val b: Int)
 
-enum class SvgColor(val rgb: RGB)
-{
+enum class SvgColor(val rgb: RGB) {
     lightpink(RGB(255, 182, 193)),
     lightsalmon(RGB(255, 160, 122)),
     lightseagreen(RGB(32, 178, 170)),
@@ -164,11 +163,8 @@ enum class SvgColor(val rgb: RGB)
     lightgreen(RGB(144, 238, 144)),
     lightgrey(RGB(211, 211, 211));
 
-
-    override fun toString(): String
-    {
-        when (this)
-        {
+    override fun toString(): String {
+        when (this) {
             lightpink -> return "lightpink"
             lightsalmon -> return "lightsalmon"
             lightseagreen -> return "lightseagreen"
@@ -320,26 +316,19 @@ enum class SvgColor(val rgb: RGB)
         return "black"
     }
 
-
-    companion object
-    {
-        fun ofRaw(colString: String): Color
-        {
+    companion object {
+        fun ofRaw(colString: String): Color {
             var color: Color = Color()
-            when
-            {
-                colString[0] == '#' -> // for hexadecimal values
-                {
+            when {
+                colString[0] == '#' -> { // for hexadecimal values
                     val colorHex =
                         Color.parseColor(colString.hexSixDigit()) // make sure it's six characters
 
 //                Log.d(SvgColor::class.simpleName, "Color is: $colorHex")
 
                     color = Color.valueOf(colorHex)
-
                 }
-                colString.contains("rgb") -> // for both rgb types
-                {
+                colString.contains("rgb") -> { // for both rgb types
                     val cleanColor = colString.trimIndent()
                         .trimStart()
                         .trimEnd()
@@ -360,14 +349,11 @@ enum class SvgColor(val rgb: RGB)
                     var g: Float = 0f
                     var b: Float = 0f
 
-                    if (colorPieces[0].contains('%')) // if percentage mode
-                    {
+                    if (colorPieces[0].contains('%')) { // if percentage mode
                         r = colorPieces[0].replace("%", "").toFloat() / 100f
                         g = colorPieces[1].replace("%", "").toFloat() / 100f
                         b = colorPieces[2].replace("%", "").toFloat() / 100f
-                    }
-                    else
-                    {
+                    } else {
                         r = colorPieces[0].toFloat() / 255f
                         g = colorPieces[1].toFloat() / 255f
                         b = colorPieces[2].toFloat() / 255f
@@ -375,10 +361,8 @@ enum class SvgColor(val rgb: RGB)
 
                     color = Color.valueOf(r, g, b)
                 }
-                else -> // for color keywords
-                {
+                else -> { // for color keywords
                     val fromRaw = SvgColor.values().first() { it.toString() == colString }
-
 
                     val r = fromRaw.rgb.r
                     val g = fromRaw.rgb.g
@@ -391,28 +375,20 @@ enum class SvgColor(val rgb: RGB)
                 }
             }
 
-
             return color.roundTwoDecimals()
             println("")
         }
     }
 }
 
-
-
-
-
-
 // todo this exists in Moush
-fun String.hexSixDigit() : String
-{
+fun String.hexSixDigit(): String {
     var value = this
 
-    if ( this.length == 4)
-    {
+    if (this.length == 4) {
         value =
             this.replace("#([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])".toRegex(),
-                         "#$1$1$2$2$3$3")
+                "#$1$1$2$2$3$3")
     }
     return value
 }

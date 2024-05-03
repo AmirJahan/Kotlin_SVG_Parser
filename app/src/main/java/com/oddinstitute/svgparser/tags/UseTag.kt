@@ -2,8 +2,7 @@ package com.oddinstitute.svgparser.tags
 
 import org.xmlpull.v1.XmlPullParser
 
-class UseTag(val parser: XmlPullParser, val definedTags: ArrayList<Tag>) : Tag(parser)
-{
+class UseTag(val parser: XmlPullParser, val definedTags: ArrayList<Tag>) : Tag(parser) {
     // USE
     var href = ""
 
@@ -16,28 +15,21 @@ class UseTag(val parser: XmlPullParser, val definedTags: ArrayList<Tag>) : Tag(p
     var width = 0f
     var height = 0f
 
-
-
-    init
-    {
+    init {
         // RECT and USE
         parser.getAttributeValue(null, "x")?.let { x = it.toFloat() }
         parser.getAttributeValue(null, "y")?.let { y = it.toFloat() }
         parser.getAttributeValue(null, "width")?.let { width = it.toFloat() }
         parser.getAttributeValue(null, "height")?.let { height = it.toFloat() }
 
-
-    // USE
-
+        // USE
         parser.getAttributeValue(null, "href")?.let { href = it }
     }
 
-    fun resultTag(): Tag
-    {
+    fun resultTag(): Tag {
         href = href.replace("#", "")
             .trim().trimStart().trimEnd()
             .replace(" ", "")
-
 
         val definedTag: Tag = definedTags.first { it.id == href }
 
@@ -52,9 +44,6 @@ class UseTag(val parser: XmlPullParser, val definedTags: ArrayList<Tag>) : Tag(p
         this.style?.let { definedTag.style = it }
         this.svgClass?.let { definedTag.svgClass = it }
 
-
-
         return definedTag
     }
-
 }

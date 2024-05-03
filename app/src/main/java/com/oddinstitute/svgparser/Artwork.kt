@@ -2,22 +2,16 @@ package com.oddinstitute.svgparser
 
 import java.util.*
 import kotlin.collections.ArrayList
-
-
 import android.graphics.Bitmap
 import com.oddinstitute.svgparser.polygon.Polygon
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
-
 // this is a large main class
 // it comes from moush
 
-
-
 @Serializable
-class Artwork ()
-{
+class Artwork() {
     // TODO this is new
     var title: String = ""
     var id: String = UUID.randomUUID().toString()
@@ -32,15 +26,9 @@ class Artwork ()
 
     var currentMotionBundleID: String = "1"
 
-
     // var motionBundles: ArrayList<MotionBundle> = arrayListOf()
 
-
     var polygons: ArrayList<Polygon> = arrayListOf()
-
-
-
-
 
     init {
         // this is for when we read from the disk. From SVG, this is done at the construct
@@ -51,7 +39,6 @@ class Artwork ()
             polygon.shapeNode.pathValueOrigin = polygon.shapeNode.pathValue.clone()
         }
     }
-
 
     // @Transient var artworkMotion: Motion = Motion("Artwork Motion")
 
@@ -65,7 +52,6 @@ class Artwork ()
     @Transient
     var hideForLayerThumbs: Boolean = false
 
-
     /*
     constructor(svgFile: SvgFile) : this()  {
         construct (svgFile)
@@ -75,5 +61,3 @@ class Artwork ()
 
      */
 }
-
-

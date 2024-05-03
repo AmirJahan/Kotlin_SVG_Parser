@@ -2,8 +2,7 @@ package com.oddinstitute.svgparser.svg_elements
 
 import android.graphics.Color
 
-class SvgStyle()
-{
+class SvgStyle() {
     var fill: Color? = null
     var stroke: Color? = null
     var strokeWidth: Float? = null
@@ -14,21 +13,18 @@ class SvgStyle()
     var strokeDashArray: Float? = null // butt | round | square
     var strokeLineJoin: SvgStrokeLineJoin? = null // butt | round | square
 
-
     // this function receives a style string and decodes it to actual SvgStyles
-    constructor(sText: String) : this()
-    {
+    constructor(sText: String) : this() {
 //        val svgStyle: SvgStyle = SvgStyle()
 
         // in style, we have both the Equal sign and the colon,
         // we replace equals with a colon
         val components = sText
-                .replace("=", ":")
-                .replace("\\s+".toRegex(), "") // remove multiple spaces
-                .split(";")
+            .replace("=", ":")
+            .replace("\\s+".toRegex(), "") // remove multiple spaces
+            .split(";")
 
-        for (each in components)
-        {
+        for (each in components) {
             val keyVal = each.split(":")
             if (keyVal.count() < 2)
                 continue
@@ -36,8 +32,7 @@ class SvgStyle()
             val key = keyVal[0]
             val value = keyVal[1]
 
-            when (key)
-            {
+            when (key) {
                 "fill" -> this.fill = SvgColor.ofRaw(value)
                 "stroke" -> this.stroke = SvgColor.ofRaw(value)
                 "stroke-width" -> this.strokeWidth = value.toFloat()

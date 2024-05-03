@@ -2,9 +2,7 @@ package com.oddinstitute.svgparser.polygon
 
 import com.oddinstitute.svgparser.svg_elements.SvgStyle
 
-
-fun Polygon.applySvgStyle(style: SvgStyle)
-{
+fun Polygon.applySvgStyle(style: SvgStyle) {
     // these three are in the shape node, because they are animatable
     style.fill?.let { this.shapeNode.fillColor = it }
     style.stroke?.let { this.shapeNode.strokeColor = it }

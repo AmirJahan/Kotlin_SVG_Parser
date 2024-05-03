@@ -2,12 +2,7 @@ package com.oddinstitute.svgparser
 
 import android.graphics.PointF
 
-
-
 val svgSplitChar = '|'
-
-
-
 
 // all of these exist in Moush
 /*

@@ -12,4 +12,5 @@ import kotlin.random.Random
 //}
 
 fun Int.toBoolean(): Boolean = this == 1
+
 fun Boolean.toFloat(): Float = if (this) 1.0f else 0.0f

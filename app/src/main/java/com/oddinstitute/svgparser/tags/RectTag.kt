@@ -5,8 +5,7 @@ import com.oddinstitute.svgparser.*
 import com.oddinstitute.svgparser.polygon.Polygon
 import org.xmlpull.v1.XmlPullParser
 
-class RectTag (val parser: XmlPullParser): Tag(parser)
-{
+class RectTag(val parser: XmlPullParser): Tag(parser) {
     // RECT
     var x = 0f
     var y = 0f
@@ -17,9 +16,7 @@ class RectTag (val parser: XmlPullParser): Tag(parser)
     var rx = 0f
     var ry = 0f
 
-
-    init
-    {
+    init {
         // RECT
         parser.getAttributeValue(null, "x")?.let { x = it.toFloat() }
         parser.getAttributeValue(null, "y")?.let { y = it.toFloat() }
@@ -31,25 +28,22 @@ class RectTag (val parser: XmlPullParser): Tag(parser)
         parser.getAttributeValue(null, "ry")?.let { ry = it.toFloat() }
     }
 
-    override fun toPolygon(): ArrayList<Polygon>
-    {
+    override fun toPolygon(): ArrayList<Polygon> {
         val segments: ArrayList<Segment> = arrayListOf()
 
         if (rx != 0.0f && ry == 0.0f) ry = rx
         if (ry != 0.0f && rx == 0.0f) rx = ry
 
-
 //        segments.addAll(roundRectToPath(x1, y1, width, height, rx, ry))
-
 
         val moveSeg = Segment(PathType.Move, PointF(x, y + ry))
         segments.add(moveSeg)
 
         val topLeftArc = SevenPieceArc(rx, ry, 0f,
-                                       largeArcFlag = false,
-                                       sweepFlag = true,
-                                       x2 = x + rx,
-                                       y2 = y)
+            largeArcFlag = false,
+            sweepFlag = true,
+            x2 = x + rx,
+            y2 = y)
 
         val topLeftSegs = topLeftArc.toSegmentsObjCMethod(PointF(x, y + ry))
         segments.addAll(topLeftSegs)
@@ -59,10 +53,10 @@ class RectTag (val parser: XmlPullParser): Tag(parser)
         segments.add(topLine)
 
         val topRightArc = SevenPieceArc(rx, ry, 0f,
-                                        largeArcFlag = false,
-                                        sweepFlag = true,
-                                        x2 = x + width,
-                                        y2 = y + ry)
+            largeArcFlag = false,
+            sweepFlag = true,
+            x2 = x + width,
+            y2 = y + ry)
         val topRightSegs = topRightArc.toSegmentsObjCMethod(PointF(x + width - rx, y))
         segments.addAll(topRightSegs)
 
@@ -71,32 +65,29 @@ class RectTag (val parser: XmlPullParser): Tag(parser)
         segments.add(rightLine)
 
         val bottomRightArc = SevenPieceArc(rx, ry, 0f,
-                                           largeArcFlag = false,
-                                           sweepFlag = true,
-                                           x2 = x + width - rx,
-                                           y2 = y + height)
+            largeArcFlag = false,
+            sweepFlag = true,
+            x2 = x + width - rx,
+            y2 = y + height)
         val bottomRightSegs =
             bottomRightArc.toSegmentsObjCMethod(PointF(x + width, y + height - ry))
         segments.addAll(bottomRightSegs)
-
 
         val bottomLine = Segment(PathType.Line)
         bottomLine.knot = PointF(x + rx, y + height)
         segments.add(bottomLine)
 
         val bottomLeftArc = SevenPieceArc(rx, ry, 0f,
-                                          largeArcFlag = false,
-                                          sweepFlag = true,
-                                          x2 = x,
-                                          y2 = y + height - ry)
+            largeArcFlag = false,
+            sweepFlag = true,
+            x2 = x,
+            y2 = y + height - ry)
         val bottomLeftSegs = bottomLeftArc.toSegmentsObjCMethod(PointF(x + rx, y + height))
         segments.addAll(bottomLeftSegs)
-
 
         val polygon: Polygon = Polygon()
         polygon.shapeNode.pathValue = PathValue(segments)
         polygon.closed = true
         return arrayListOf(polygon)
-
     }
 }

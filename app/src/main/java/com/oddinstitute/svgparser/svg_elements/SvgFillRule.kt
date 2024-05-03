@@ -3,22 +3,18 @@ package com.oddinstitute.svgparser.svg_elements
 import android.graphics.Paint
 import android.graphics.Path
 
-enum class SvgFillRule(val text: String)
-{
+enum class SvgFillRule(val text: String) {
     EVENODD("evenodd"),
     NONZERO("nonzero");
-
 
     fun toRaw() = enumToRaw[this]
     fun toType() = enumToType[this]
 
-    companion object
-    {
+    companion object {
         val rawToEnum = mapOf("evenodd" to EVENODD,
-                              "nonzero" to NONZERO)
+            "nonzero" to NONZERO)
         val enumToRaw = rawToEnum.entries.associate { (k, v) -> v to k }
         fun ofRaw(raw: String): SvgFillRule? = rawToEnum[raw]
-
 
         // todo
         // IMPORTANT
@@ -26,38 +22,29 @@ enum class SvgFillRule(val text: String)
         // In other words, SVG's NONEZERO is Android's WINDING
 
         val typeToEnum = mapOf<Path.FillType, SvgFillRule>(Path.FillType.EVEN_ODD to EVENODD,
-                                                           Path.FillType.WINDING to NONZERO)
+            Path.FillType.WINDING to NONZERO)
         val enumToType = typeToEnum.entries.associate { (k, v) -> v to k }
-
-
-
     }
 }
 
-
-
-enum class SvgStrokeLineJoin(val text: String)
-{
-    ARCS ("arcs"),
-    BEVEL ("bevel"),
-    MITER ("miter"),
-    MITERCLIP ("miter-clip"),
-    ROUND ("round");
-
+enum class SvgStrokeLineJoin(val text: String) {
+    ARCS("arcs"),
+    BEVEL("bevel"),
+    MITER("miter"),
+    MITERCLIP("miter-clip"),
+    ROUND("round");
 
     fun toRaw() = enumToRaw[this]
     fun toType() = enumToType[this]
 
-    companion object
-    {
+    companion object {
         val rawToEnum = mapOf("arcs" to ARCS,
-                              "bevel" to BEVEL,
-                              "miter" to MITER,
-                              "miter-clip" to MITERCLIP,
-                              "round" to ROUND)
+            "bevel" to BEVEL,
+            "miter" to MITER,
+            "miter-clip" to MITERCLIP,
+            "round" to ROUND)
         val enumToRaw = rawToEnum.entries.associate { (k, v) -> v to k }
         fun ofRaw(raw: String): SvgStrokeLineJoin? = rawToEnum[raw]
-
 
         // todo
         // IMPORTANT
@@ -65,11 +52,11 @@ enum class SvgStrokeLineJoin(val text: String)
         // In other words, SVG's NONEZERO is Android's WINDING
 
         val typeToEnum = mapOf<Paint.Join, SvgStrokeLineJoin>(Paint.Join.BEVEL to BEVEL,
-                                                              Paint.Join.MITER to MITER,
-                                                              Paint.Join.ROUND to ROUND,
+            Paint.Join.MITER to MITER,
+            Paint.Join.ROUND to ROUND,
 //                                                              Paint.Join.ROUND to ARCS, // this doesn't exist
 //                                                              Paint.Join.ROUND to MITERCLIP // this doesn't exist
-                                                             )
+        )
         val enumToType = typeToEnum.entries.associate { (k, v) -> v to k }
     }
 }

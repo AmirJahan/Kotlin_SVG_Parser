@@ -5,28 +5,22 @@ import android.graphics.Path
 import com.oddinstitute.svgparser.ShapeNode
 import kotlinx.serialization.Serializable
 
-
 // polygon is a main class coming from Moush
 
 @Serializable
-class Polygon ()
-{
+class Polygon() {
     var shapeNode: ShapeNode = ShapeNode()
-
 
     var closed: Boolean = true
 
-
     // TODO
     // these variables are new
-    var strokeLineCap : Paint.Cap = Paint.Cap.ROUND
+    var strokeLineCap: Paint.Cap = Paint.Cap.ROUND
     var fillType: Path.FillType = Path.FillType.EVEN_ODD
     // Clip rule is not currently supported in this parser
     var clipRule: Path.FillType = Path.FillType.EVEN_ODD
     var dashArray: Float? = null
-    var strokeLineJoin : Paint.Join = Paint.Join.MITER
-
-
+    var strokeLineJoin: Paint.Join = Paint.Join.MITER
 
     // TODO - All these have to be uncommented
 
@@ -77,12 +71,9 @@ class Polygon ()
     var mainPath: Path = Path()
        // @Exclude get() { return field } FIREBASE ONLY
 
-
     @Transient
     var newGuidesPath: Path? = null
        //  @Exclude get() { return field } FIREBASE ONLY
-
-
 
     /*
     @Transient
@@ -91,6 +82,4 @@ class Polygon ()
         @Exclude get() { return field }
 
      */
-
 }
-

@@ -4,21 +4,17 @@ import com.oddinstitute.svgparser.tags.path_tag.PathTag
 import kotlin.math.*
 
 // rx ry x-axis-rotation large-arc-flag sweep-flag x y
-data class SevenPieceArc(var rx: Float,
-                          var ry: Float,
-                          val xAxisRotation: Float,
-                          val largeArcFlag: Boolean,
-                          val sweepFlag: Boolean,
-                          val x2: Float,
-                          val y2: Float)
-{
+data class SevenPieceArc(
+    var rx: Float,
+    var ry: Float,
+    val xAxisRotation: Float,
+    val largeArcFlag: Boolean,
+    val sweepFlag: Boolean,
+    val x2: Float,
+    val y2: Float
+)
 
-}
-
-
-
-fun PathTag.arcToBeziers(angleStart: Double, angleExtent: Double): FloatArray
-{
+fun PathTag.arcToBeziers(angleStart: Double, angleExtent: Double): FloatArray {
     val numPieces = ceil(abs(angleExtent) / (Math.PI * 2.0)).toInt() // (angleExtent / 90deg)
     val angleIncrement = angleExtent / numPieces
 
@@ -27,10 +23,8 @@ fun PathTag.arcToBeziers(angleStart: Double, angleExtent: Double): FloatArray
 
     val coords = FloatArray(numPieces * 6)
 
-
     var pos = 0
-    for (i in 0 until numPieces)
-    {
+    for (i in 0 until numPieces) {
         var angle = angleStart + i * angleIncrement
 
         // Calculate the control vector at this angle

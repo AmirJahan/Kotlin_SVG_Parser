@@ -1,11 +1,6 @@
 package com.oddinstitute.svgparser.svg_elements
 
-
-
-
-
-class SvgTransform(val type: SvgTransformType)
-{
+class SvgTransform(val type: SvgTransformType) {
     // we use the same structure for translate, rotate and scale
     // for that, all values are optional
     var x: Float = 0f
@@ -17,11 +12,7 @@ class SvgTransform(val type: SvgTransformType)
 
     var matrix: SvgMatrixTransform? = null
 
-
-
-
-    fun clone (): SvgTransform
-    {
+    fun clone(): SvgTransform {
         val svgTransform = SvgTransform(this.type)
         svgTransform.x = this.x
         svgTransform.y = this.y
@@ -30,9 +21,6 @@ class SvgTransform(val type: SvgTransformType)
         svgTransform.cy = this.cy
 
         svgTransform.matrix = this.matrix?.clone()
-
-
-
 
         return svgTransform
     }

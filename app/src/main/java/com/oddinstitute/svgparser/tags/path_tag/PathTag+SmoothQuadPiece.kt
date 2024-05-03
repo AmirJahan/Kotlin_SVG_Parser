@@ -4,18 +4,16 @@ import android.graphics.PointF
 import com.oddinstitute.svgparser.PathType
 import com.oddinstitute.svgparser.Segment
 
-
-fun PathTag.smoothQuadPiece(piece: String, curPoint: PointF, prevSegment: Segment): Segment
-{
+fun PathTag.smoothQuadPiece(piece: String, curPoint: PointF, prevSegment: Segment): Segment {
     val str = piece
-            .replace(" ", ",")
-            .replace("t", "")
-            .replace("T", "")
-            .replace(" ", ",")
-            .replace(",,", ",") // it's possible to get two commas
+        .replace(" ", ",")
+        .replace("t", "")
+        .replace("T", "")
+        .replace(" ", ",")
+        .replace(",,", ",") // it's possible to get two commas
 
     val points = str
-            .split(",")
+        .split(",")
 
     // if we are relative, we find the actual value based on the cur point
     // this is simply a shortcut, when relative, we use curPoint, when not, we don't
@@ -28,15 +26,14 @@ fun PathTag.smoothQuadPiece(piece: String, curPoint: PointF, prevSegment: Segmen
 
     /**
      * T
-     * Draws a quadratic Bézier curve from the current point to (x,y).
+     * Draws a quadratic Bezier curve from the current point to (x,y).
      * The control point is assumed to be the reflection of the control point
      * on the previous command relative to the current point.
      * If there is no previous command or if the previous command was not a Q, q, T or t,
      * assume the control point is coincident with the current point
      */
 
-    if (prevSegment.type == PathType.Quad || prevSegment.type == PathType.SmoothQuad)
-    {
+    if (prevSegment.type == PathType.Quad || prevSegment.type == PathType.SmoothQuad) {
         var prevCp1X = 0f
         var prevCp1Y = 0f
 
@@ -44,7 +41,6 @@ fun PathTag.smoothQuadPiece(piece: String, curPoint: PointF, prevSegment: Segmen
             prevCp1X = it.x
             prevCp1Y = it.y
         }
-
 
         // these reflections are irrelevant of the relative or not
         // they have to consider the "curPoint", not the "intCurPoint"
@@ -54,9 +50,7 @@ fun PathTag.smoothQuadPiece(piece: String, curPoint: PointF, prevSegment: Segmen
             2 * curPoint.y - prevCp1Y //+ curY
 
         smoothQuad.cp1 = PointF(xReflectionOfFirstCP, yReflectionOfFirstCP)
-    }
-    else
-    {
+    } else {
         smoothQuad.cp1 =
             PointF(prevSegment.knot.x, prevSegment.knot.y)
     }

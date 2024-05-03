@@ -7,21 +7,18 @@ import com.oddinstitute.svgparser.polygon.Polygon
 import com.oddinstitute.svgparser.Segment
 import org.xmlpull.v1.XmlPullParser
 
-class TextTag(val parser: XmlPullParser) : Tag(parser)
-{
+class TextTag(val parser: XmlPullParser) : Tag(parser) {
     // TEXT
     var x = 0f
     var y = 0f
 
-    init
-    {
+    init {
         // TEXT
         parser.getAttributeValue(null, "x")?.let { x = it.toFloat() }
         parser.getAttributeValue(null, "y")?.let { y = it.toFloat() }
     }
 
-    override fun toText(): ArrayList<Polygon>
-    {
+    override fun toText(): ArrayList<Polygon> {
         /*
         It seems like when we have many objects inside an artwork
         these objects can be
@@ -50,9 +47,7 @@ class TextTag(val parser: XmlPullParser) : Tag(parser)
         return arrayListOf()
     }
 
-
-    override fun toPolygon(): ArrayList<Polygon>
-    {
+    override fun toPolygon(): ArrayList<Polygon> {
         val segments: ArrayList<Segment> = arrayListOf()
 
 //
