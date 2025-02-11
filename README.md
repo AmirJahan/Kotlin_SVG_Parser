@@ -100,6 +100,6 @@ The project includes 200+ test SVG icons in `/app/src/main/assets/magicons/` for
 
 ---
 
-## Image Generation Prompt
+## Kotlin SVG Parser Image Generation Prompt
 
 A technical illustration showing the transformation of SVG code into rendered vector graphics. On the left side, XML code with recognizable SVG tags—path, rect, circle, polygon—displays in a code editor aesthetic with syntax highlighting in vibrant colors. Flowing transformation lines connect the code to the right side where beautiful vector icons materialize: geometric shapes, bezier curves forming smooth paths, and complex illustrations rendered with perfect crispness. The center showcases the parsing process with abstract representations of path commands (M, L, C, Q, A, Z) converting into actual curve segments. A side-by-side comparison panel shows two renderings—custom parser output alongside reference library output—demonstrating accuracy. The Android robot subtly integrates into the composition, holding or presenting the parsed graphics. Background features a grid pattern suggesting precision and mathematical foundations, with gradient fills demonstrating SVG styling capabilities. Bezier curve control points and handles are visible on some paths, revealing the underlying mathematics. Style: technical documentation illustration, developer tool aesthetic, clean vector art showcasing vector art, meta and self-referential design, suitable for Android development resources.
